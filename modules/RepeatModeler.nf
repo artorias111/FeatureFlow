@@ -1,6 +1,8 @@
 #!/usr/bin/env nextflow
 
 process ModelRepeats {
+    conda '/data2/work/local/miniconda/envs/RepeatMask'
+
     publishDir 'results/RepeatModeler', mode: 'copy'
 
     input:

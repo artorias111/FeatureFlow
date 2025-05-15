@@ -18,6 +18,8 @@ process createCuratedRepeats {
 }
 
 process MaskRepeats {
+    conda '/data2/work/local/miniconda/envs/RepeatMask'
+
     publishDir 'results/RepeatMasker', mode: 'copy'
 
     input:
@@ -29,12 +31,11 @@ process MaskRepeats {
 
     script:
     """
-    ${params.repeatmasker} -a \
+    ${params.repeatmasker}/RepeatMasker -a \
     -lib curated_repeats.fa ${genome_assembly} \
     -poly \
     -gff \
     -pa ${params.nthreads} \
-    -xsmall \
-    -dir $PWD
+    -xsmall 
     """
 }

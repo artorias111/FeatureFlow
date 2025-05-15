@@ -8,20 +8,6 @@ include { MaskRepeats } from './modules/RepeatMasker.nf'
 
 
 
-// define default parameters
-
-params {
-    nthreads = 32
-
-    // fixed file paths
-    genome_assembly = '' // path to the genome assembly you want annotated
-    dfam_ref = ''  // dfam annotated repeats
-    rna_reads = '' // rna reads from sra
-
-    // executable paths 
-    repeatmasker = '' // repeatmasker filepath (don't include the executable)
-    repeatmodeler = '' // repeatmodeler filepath 
-}
 
 
 workflow {
