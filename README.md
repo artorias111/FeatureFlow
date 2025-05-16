@@ -4,9 +4,8 @@ A Nextflow pipeline for genome annotation including repeat masking, gene predict
 
 ## Prerequisites
 
-- Nextflow (21.10.0 or later)
-- Conda or Singularity (for tool dependencies)
-- Access to reference data (Dfam, protein references)
+- Nextflow: `conda activate /data2/work/local/miniconda/envs/nextflow`
+- Access to reference data (protein references, RNA-seq reads for genome annotation)
 
 ## Quick Start
 
@@ -28,10 +27,10 @@ nextflow run annotate.nf --help
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
-| `--genome_assembly` | Path to genome assembly FASTA file | Set in nextflow.config |
+| `--genome_assembly` | Path to genome assembly FASTA file | Set in `nextflow.config` |
 | `--nthreads` | Number of CPU threads to use | 32 |
-| `--rna_reads` | Path to RNA-seq reads directory | Set in nextflow.config |
-| `--protein_ref` | Path to reference proteins FASTA file | Set in nextflow.config |
+| `--rna_reads` | Path to RNA-seq reads directory | Set in `nextflow.config` |
+| `--protein_ref` | Path to reference proteins FASTA file | Set in `nextflow.config` |
 
 ## Output
 
