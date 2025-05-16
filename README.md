@@ -1,5 +1,4 @@
-# ChengLab Feature Flow Pipeline
-
+# FeatureFlow
 A Nextflow pipeline for genome annotation including repeat masking, gene prediction, and functional annotation.
 
 ## Prerequisites
