@@ -14,7 +14,7 @@ A pipeline for genome annotation including repeat masking, gene prediction, and 
 conda activate /data2/work/local/miniconda/envs/nextflow
 
 # clone this repo
-git clone
+git clone https://github.com/artorias111/FeatureFlow.git
 cd FeatureFlow
 # Run FeatureFlow
 nextflow run annotate.nf --genome_assembly /path/to/my_genome.fa --rna-reads /path/to/rna/reads --nthreads 64
