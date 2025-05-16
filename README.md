@@ -1,5 +1,5 @@
 # FeatureFlow
-A Nextflow pipeline for genome annotation including repeat masking, gene prediction, and functional annotation.
+A pipeline for genome annotation including repeat masking, gene prediction, and functional annotation.
 
 ## Prerequisites
 
