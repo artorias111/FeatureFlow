@@ -43,8 +43,16 @@ The pipeline generates annotated genome files in the `results` directory, includ
 
 ## Advanced Usage
 
+
 For advanced configuration options, see the help message:
 
 ```bash
 nextflow run annotate.nf --help
 ```
+
+
+
+## Pipeline overview
+<img width="726" alt="image" src="https://github.com/user-attachments/assets/fe559abc-fcb9-4d01-9c89-90c56a6fc957" />
+
+
