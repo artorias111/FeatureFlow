@@ -41,6 +41,13 @@ log.info "Protein ref    : ${params.protein_ref}"
 log.info "Threads        : ${params.nthreads}"
 log.info ""
 
+// check if help message is requested
+
+if (params.help) {
+    helpMessage()
+    exit 0
+}
+
 
 // include modules
 
