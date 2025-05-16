@@ -8,6 +8,7 @@ process runInterPro {
 
     output:
     path "*.gff3"
+    path "*.tsv"
 
     script:
     """
@@ -15,6 +16,6 @@ process runInterPro {
     -cpu ${params.nthreads} \
     -i ${cds_fasta} \
     -verbose \
-    -f gff3
+    -f tsv,gff3
     """
 }
