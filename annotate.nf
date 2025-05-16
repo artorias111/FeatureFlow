@@ -1,5 +1,47 @@
 #!/usr/bin/env nextflow
 
+
+def helpMessage() {
+    log.info"""
+    ===============================
+    ChengLab Feature Flow Pipeline
+    ===============================
+    
+    Usage:
+    nextflow run annotate.nf [options]
+    
+    Core Options:
+      --genome_assembly     Path to genome assembly FASTA file (default: ${params.genome_assembly})
+      --nthreads            Number of CPU threads to use (default: ${params.nthreads})
+      --rna_reads           Path to RNA-seq reads directory (default: ${params.rna_reads})
+      --protein_ref         Path to reference proteins FASTA file (default: ${params.protein_ref})
+      
+    Advanced Options:
+      --dfam_ref            Path to Dfam reference
+      --repeatmasker        Path to RepeatMasker installation
+      --repeatmodeler       Path to RepeatModeler installation
+      --braker_docker_image Path to Braker3 Singularity image
+      --augustus_config     Path to Augustus config directory
+      --interproscan        Path to InterProScan installation
+      
+    Execution Options:
+      --help                Display this help message
+      -resume               Resume previous run
+    """
+}
+
+
+// Log pipeline info
+log.info ""
+log.info "ChengLab Feature Flow Pipeline"
+log.info "==============================="
+log.info "Genome assembly: ${params.genome_assembly}"
+log.info "RNA-seq reads  : ${params.rna_reads}"
+log.info "Protein ref    : ${params.protein_ref}"
+log.info "Threads        : ${params.nthreads}"
+log.info ""
+
+
 // include modules
 
 include { ModelRepeats } from './modules/RepeatModeler.nf'
