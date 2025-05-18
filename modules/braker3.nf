@@ -2,6 +2,18 @@ process runBraker3 {
     publishDir 'results/Braker3', mode: 'copy'
     container "${params.braker_docker_image}"
     containerOptions "--bind /data2/work/local/braker3/config:/augustus_config"
+
+    cpus {
+        // Make sure nthreads does not exceed 48, GeneMark doesn't like it
+
+        if(params.nthreads < 48) {
+            return params.nthreads
+        } else {
+            return 48
+        }
+    }
+
+
     
     input:
     path masked_assembly
@@ -24,7 +36,7 @@ process runBraker3 {
     --prot_seq=${protein_ref} \
     --rnaseq_sets_ids=${ID_list} \
     --rnaseq_sets_dirs=${rna_reads} \
-    --gff3 --threads=${params.nthreads} \
+    --gff3 --threads=${task.cpus} \
     --softmasking \
     --AUGUSTUS_CONFIG_PATH=${PWD}/augustus_config_dir
     """
