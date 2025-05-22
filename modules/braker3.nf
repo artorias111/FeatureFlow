@@ -39,7 +39,9 @@ process runBraker3 {
     --rnaseq_sets_dirs=${rna_reads} \
     --gff3 --threads=${task.cpus} \
     --softmasking \
-    --AUGUSTUS_CONFIG_PATH=${PWD}/augustus_config_dir
+    --AUGUSTUS_ab_initio \
+    --AUGUSTUS_CONFIG_PATH=${PWD}/augustus_config_dir \
+    --busco_lineage=actinopterygii
     """
 }
 
