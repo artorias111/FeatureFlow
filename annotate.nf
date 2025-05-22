@@ -57,10 +57,9 @@ include { MaskRepeats } from './modules/RepeatMasker.nf'
 include { runBraker3 } from './modules/braker3.nf'
 include { createKimuraDivergencePlots } from './modules/RepeatMasker.nf'
 include { getRnaIDs } from './modules/braker3.nf'
-include { getCdna } from './modules/gffread.nf'
+// include { getCdna } from './modules/gffread.nf'
 include { runInterPro } from './modules/interpro.nf'
-
-
+include { cleanBrakerAA } from './modules/clean_braker_aa.nf'
 
 
 workflow {
@@ -80,6 +79,7 @@ workflow {
     runBraker3(MaskRepeats.out.masked_file, params.rna_reads, params.protein_ref, getRnaIDs.out.ID_list)
 
     // Functional annotation
-    getCdna(MaskRepeats.out.masked_file, runBraker3.out.braker_annots)
-    runInterPro(getCdna.out)
+    // getCdna(MaskRepeats.out.masked_file, runBraker3.out.braker_annots)
+    cleanBrakerAA(runBraker3.out.aa_seqs)
+    runInterPro(cleanBrakerAA.out)
 }

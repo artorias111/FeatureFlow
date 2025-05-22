@@ -24,6 +24,7 @@ process runBraker3 {
     output:
     path 'braker/*'
     path 'braker/braker.gff3', emit :braker_annots
+    path 'braker/braker.aa', emit: aa_seqs
     
     script:
     """
@@ -53,7 +54,7 @@ process getRnaIDs {
     
     script:
     """
-    ls ${rna_reads} | grep "_1" | sed 's/_1.*//' | paste -sd, - | tr -d '\n'
+    ls -1 ${rna_reads} | grep "_1" | sed 's/_1.*//' | sort | uniq | paste -sd, - | tr -d '\n'
     """
 }
 
