@@ -31,9 +31,9 @@ FeatureFlow can be run in different modes, depending on the use case. A list of 
 
 | Run mode | Flag | Description |
 |----------|------|-------------|
-| full     | `--runMode full` | entire pipeline, requires `-g` and `-r` |
-| braker | `--runMode braker` | only braker, expects you to provide a masked genome assembly via `-g`. Also requires `-r` |
-|interPro | `--runMode interPro` | only interPro, expects you to provide an amino acid sequence file via `-a` |
+| full     | `--runMode full` | entire pipeline, requires `--genome_assembly` and `--rna_reads` |
+| braker | `--runMode braker` | only braker, expects you to provide a masked genome assembly via `--genome_assembly`. Also requires `--rna_reads` |
+|interPro | `--runMode interPro` | only interPro, expects you to provide an amino acid sequence file via `--braker_aa` |
 
 
 
@@ -41,11 +41,11 @@ FeatureFlow can be run in different modes, depending on the use case. A list of 
 
 | Parameter | Description |
 |-----------|-------------|
-| `--genome_assembly` or `-g` | Path to genome assembly FASTA file |
-| `--nthreads` or `-n` | Number of CPU threads to use (default: `32`) |
-| `--rna_reads` or `-r` | Path to RNA-seq reads directory | 
-| `--protein_ref` or `-p` | Path to reference proteins FASTA file | 
-|`--braker_aa` or `-a` |Path to a `braker.aa` (or any) amino acid fasta file |
+| `--genome_assembly` | Path to genome assembly FASTA file |
+| `--nthreads` | Number of CPU threads to use (default: `32`) |
+| `--rna_reads` | Path to RNA-seq reads directory | 
+| `--protein_ref`| Path to reference proteins FASTA file | 
+|`--braker_aa`|Path to a `braker.aa` (or any) amino acid fasta file |
 
 ## Output
 
