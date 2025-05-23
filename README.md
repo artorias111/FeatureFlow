@@ -16,6 +16,8 @@ conda activate /data2/work/local/miniconda/envs/nextflow
 # clone this repo
 git clone https://github.com/artorias111/FeatureFlow.git
 cd FeatureFlow
+# rename the folder to make more sense
+mv FeatureFlow Dmaw12_annotations
 # Run FeatureFlow
 nextflow run annotate.nf --runMode full --genome_assembly /path/to/my_genome.fa --rna-reads /path/to/rna/reads --nthreads 64
 
