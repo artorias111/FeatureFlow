@@ -71,6 +71,3 @@ For advanced configuration, you can edit the parameters directly in the `nextflo
 nextflow run annotate.nf --help
 ```
 
-
-Test 
-
