@@ -16,6 +16,7 @@ process runInterPro {
     -cpu ${params.nthreads} \
     -i ${cds_fasta} \
     -verbose \
+    --goterms \
     -f tsv,gff3
     """
 }
