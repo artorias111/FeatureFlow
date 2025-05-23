@@ -9,8 +9,7 @@ process ModelRepeats {
     path genome_assembly
 
     output:
-    path 'asm.db-families.fa' // placeholder, I need to figure out the actual name
-
+    path 'asm.db-families.fa'
     script:
     """
     ${params.repeatmodeler}/BuildDatabase -name asm.db \
