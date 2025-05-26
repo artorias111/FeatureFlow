@@ -52,12 +52,13 @@ include { createCuratedRepeats } from './modules/RepeatMasker.nf'
 include { MaskRepeats } from './modules/RepeatMasker.nf'
 include { runBraker3 } from './modules/braker3.nf'
 include { createKimuraDivergencePlots } from './modules/RepeatMasker.nf'
-include { getRnaIDs } from './modules/braker3.nf'
-// include { getCdna } from './modules/gffread.nf'
+include { getRnaIDs } from './modules/get_rna_ids.nf'
 include { runInterPro } from './modules/interpro.nf'
 include { cleanBrakerAA } from './modules/clean_braker_aa.nf'
 
-
+// phased out
+// include { getCdna } from './modules/gffread.nf'
+// include { getRnaIDs } from './modules/braker3.nf'
 
 // interpro only
 
@@ -96,7 +97,7 @@ workflow braker_only { // --runMode braker
     log.info ""
 
     getRnaIDs(params.rna_reads)
-    runBraker3(params.genome_assembly, params.rna_reads, params.protein_ref, getRnaIDs.out.ID_list)
+    runBraker3(params.genome_assembly, getRnaIDs.out.renamed_reads_path, params.protein_ref, getRnaIDs.out.ID_list)
 
 }
 
@@ -127,7 +128,7 @@ workflow full_pipeline {
 
     // helper function for braker, followed by braker
     getRnaIDs(params.rna_reads)
-    runBraker3(MaskRepeats.out.masked_file, params.rna_reads, params.protein_ref, getRnaIDs.out.ID_list)
+    runBraker3(MaskRepeats.out.masked_file, getRnaIDs.out.renamed_reads_path, params.protein_ref, getRnaIDs.out.ID_list)
 
     // Functional annotation
     // getCdna(MaskRepeats.out.masked_file, runBraker3.out.braker_annots)

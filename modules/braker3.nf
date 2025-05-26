@@ -1,3 +1,6 @@
+#!/usr/bin/env nextflow
+
+
 process runBraker3 {
     publishDir 'results/Braker3', mode: 'copy'
     container "${params.braker_docker_image}"
@@ -13,8 +16,6 @@ process runBraker3 {
         }
     }
 
-
-    
     input:
     path masked_assembly
     path rna_reads
@@ -59,4 +60,3 @@ process getRnaIDs {
     ls -1 ${rna_reads} | grep "_1" | sed 's/_1.*//' | sort | uniq | paste -sd, - | tr -d '\n'
     """
 }
-
