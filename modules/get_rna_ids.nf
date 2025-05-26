@@ -12,7 +12,7 @@ process getRnaIDs {
     script:
 
     """
-    python ${projectDir}/bin/getRnaIDs.py --rna_dir ${rna_reads} > rna_ids.tsv
+    python3 ${projectDir}/bin/getRnaIDs.py --rna_dir ${rna_reads} > rna_ids.tsv
 
     mkdir renamed_reads
     mv *.fastq.gz renamed_reads
