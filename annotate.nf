@@ -1,10 +1,9 @@
 #!/usr/bin/env nextflow
 
-
 def helpMessage() {
     log.info"""
     ===============================
-    ChengLab Feature Flow Pipeline
+    Feature Flow Pipeline: Annotate genome assemblies with Braker3 and InterProScan
     ===============================
     
     Usage:
@@ -135,7 +134,6 @@ workflow full_pipeline {
     cleanBrakerAA(runBraker3.out.aa_seqs)
     runInterPro(cleanBrakerAA.out)
 }
-
 
 
 // entry point to `nextflow run`: 
