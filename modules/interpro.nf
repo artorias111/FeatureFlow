@@ -7,8 +7,8 @@ process runInterPro {
     path cds_fasta
 
     output:
-    path "*.gff3"
-    path "*.tsv"
+    path "*.gff3", emit :interpro_gff3
+    path "*.tsv", emit :interpro_tsv 
 
     script:
     """
