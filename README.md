@@ -59,6 +59,7 @@ FeatureFlow can be run in different modes, depending on the use case. A list of 
 |`--braker_aa`|Path to a `braker.aa` (or any) amino acid fasta file |
 
 ## Output
+If you're interested in the final annotated `gff3`, you will find it in `results/agat/agat_out`
 
 When run in `full` mode, the pipeline generates annotated genome files in the `results` directory, including:
 - Repeat-masked genome sequences
