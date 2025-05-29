@@ -54,12 +54,63 @@ include { createKimuraDivergencePlots } from './modules/RepeatMasker.nf'
 include { getRnaIDs } from './modules/get_rna_ids.nf'
 include { runInterPro } from './modules/interpro.nf'
 include { cleanBrakerAA } from './modules/clean_braker_aa.nf'
+include { combine_interpro_braker } from './modules/agat.nf'
 
 // phased out
 // include { getCdna } from './modules/gffread.nf'
 // include { getRnaIDs } from './modules/braker3.nf'
 
+
+//    ===============================
+//    ===============================
+//    ===============================
+
+
+// Testing Workflows
+
+// agat_only
+
+workflow agat_only { // --runMode agat
+
+    log.info "AGAT only test"
+    log.info "interpro tsv: ${params.interprotsv}"
+    log.info "braker gff3: ${params.brakergff3}"
+
+    combine_interpro_braker(params.brakergff3, params.interprotsv)
+
+}
+
+
+
+
+
+//    ===============================
+//    ===============================
+//    ===============================
+
+
+
+// Legit workflows
+
 // interpro only
+
+workflow braker_interpro { // --runMode braker_interpro
+    // Log pipeline info 
+    log.info "FeatureFlow: Braker and interpro mode"
+    log.info "==============================="
+    log.info "Genome assembly: ${params.genome_assembly}"
+    log.info "RNA-seq reads  : ${params.rna_reads}"
+    log.info "Protein ref    : ${params.protein_ref}"
+    log.info "Threads        : ${params.nthreads}"
+    log.info ""
+
+    
+    getRnaIDs(params.rna_reads)
+    runBraker3(params.genome_assembly, getRnaIDs.out.renamed_reads_path, params.protein_ref, getRnaIDs.out.ID_list)
+    cleanBrakerAA(runBraker3.out.aa_seqs)
+    runInterPro(cleanBrakerAA.out)
+    combine_interpro_braker(runBraker3.out.braker_annots, runInterPro.out.interpro_tsv)
+}
 
 workflow interPro_only { // --runMode interPro
     if (!params.braker_aa) {
@@ -133,6 +184,8 @@ workflow full_pipeline {
     // getCdna(MaskRepeats.out.masked_file, runBraker3.out.braker_annots)
     cleanBrakerAA(runBraker3.out.aa_seqs)
     runInterPro(cleanBrakerAA.out)
+    combine_interpro_braker(runBraker3.out.braker_annots, runInterPro.out.interpro_tsv)
+
 }
 
 
@@ -149,5 +202,11 @@ workflow {
 
     if (params.runMode == 'full') {
         full_pipeline()
+    }
+
+    // testing
+
+    if (params.runMode == 'agat') {
+        agat_only()
     }
 }

@@ -2,3 +2,10 @@ work/*
 results/*
 .nextflow*
 *.html
+.DS_Store
+.vscode/
+.idea/
+
+# Rust specific git ignores
+**/target/
+**.rs.bk

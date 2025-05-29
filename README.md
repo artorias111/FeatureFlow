@@ -19,7 +19,7 @@ git clone https://github.com/artorias111/FeatureFlow.git
 mv FeatureFlow Dmaw12_annotations
 cd Dmaw12_annotations
 
-# Run FeatureFlow
+# Run FeatureFlow's entire pipeline
 nextflow run annotate.nf --runMode full --genome_assembly /path/to/my_genome.fa --rna-reads /path/to/rna/reads --nthreads 64
 
 # Run FeatureFlow in interpro mode
@@ -29,12 +29,20 @@ nextflow run annotate.nf --runMode interPro --braker_aa /path/to/braker.aa
 nextflow run annotate.nf --help
 ```
 
+## Usage scenarios
+There are situations where you've run RepeatMasker after assembling your genome, and now you want to run the rest of this pipeline, without running repeatmasker again. That's possible, via different run modes of FeatureFlow, provided with the `--runMode` flag. A list of all Run Modes are in the "Run Modes" section below. \
+If you want to run the pipeline starting from braker: 
+```bash
+nextflow run annotate.nf --runMode braker_interpro --genome_assembly /path/to/masked/assembly.fa --rna_reads /path/to/rna_seq/read/dir
+```
+
 ## Run Modes
 FeatureFlow can be run in different modes, depending on the use case. A list of available Run Modes and use cases: 
 
 | Run mode | Flag | Description |
 |----------|------|-------------|
 | full     | `--runMode full` | entire pipeline, requires `--genome_assembly` and `--rna_reads` |
+| braker+interpro|`--runMode braker_interpro`| Run braker, followed by interproscan, and combine the two results. Ideal if you've already run repeatmasker |
 | braker | `--runMode braker` | only braker, expects you to provide a masked genome assembly via `--genome_assembly`. Also requires `--rna_reads` |
 |interPro | `--runMode interPro` | only interPro, expects you to provide an amino acid sequence file via `--braker_aa` |
 
@@ -65,9 +73,17 @@ Another set of outputs includes the standard `work` directory produced by Nextfl
 
 ## Advanced Usage
 
-For advanced configuration, you can edit the parameters directly in the `nextflow.config` file. However, this is not a recommended option, and is primarily targeted for development use only. For more information, see the help message:
+For advanced configuration, you can edit the parameters directly in the `nextflow.config` file. However, this is not a recommended option, and is primarily targeted for development use only. There's also some workflows that's only available for dev. For more information, see the help message:
 
 ```bash
 nextflow run annotate.nf --help
 ```
 
+## tools used in this annotation pipeline
+- RepeatMasker
+- RepeatModeler
+- HISAT2
+- BRAKER3
+- gffread
+- interProScan
+- AGAT
