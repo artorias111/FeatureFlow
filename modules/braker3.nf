@@ -23,7 +23,7 @@ process runBraker3 {
     val ID_list
     
     output:
-    path 'braker/*'
+    path 'braker/*', emit :braker_dir
     path 'braker/braker.gff3', emit :braker_annots
     path 'braker/braker.aa', emit: aa_seqs
     
