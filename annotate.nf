@@ -116,6 +116,10 @@ workflow interPro_only { // --runMode interPro
     if (!params.braker_aa) {
         error "ERROR: --braker_aa missing for interpro_only mode"
     }
+
+    if (!params.braker_aa) {
+        error "ERROR: --braker_gff missing for interpro_only mode"
+    }
     // Log pipeline info
     log.info ""
     log.info "FeatureFlow: interPro mode"
@@ -127,8 +131,10 @@ workflow interPro_only { // --runMode interPro
 
 
     interpro_ch = Channel.fromPath(params.braker_aa)
+    braker_gff_ch = Channel.fromPath(params.braker_gff)
     cleanBrakerAA(interpro_ch)
     runInterPro(cleanBrakerAA.out)
+    combine_interpro_braker(braker_gff_ch, runInterPro.out.interpro_tsv)
 }
 
 
