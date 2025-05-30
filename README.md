@@ -52,8 +52,8 @@ FeatureFlow can be run in different modes, depending on the use case. A list of 
 
 | Parameter | Description |
 |-----------|-------------|
-| `--genome_assembly` | Path to genome assembly FASTA file |
-| `--nthreads` | Number of CPU threads to use (default: `32`) |
+| `--genome_assembly` | Path to genome assembly FASTA file (or the masked assembly, depending on the `runMode` |
+| `--nthreads` | Number of CPU threads to use (default: `64`) |
 | `--rna_reads` | Path to RNA-seq reads directory | 
 | `--protein_ref`| Path to reference proteins FASTA file | 
 |`--braker_aa`|Path to a `braker.aa` (or any) amino acid fasta file |
