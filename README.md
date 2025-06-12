@@ -20,7 +20,7 @@ mv FeatureFlow Dmaw12_annotations
 cd Dmaw12_annotations
 
 # Run FeatureFlow's entire pipeline
-nextflow run annotate.nf --runMode full --genome_assembly /path/to/my_genome.fa --rna-reads /path/to/rna/reads --nthreads 64
+nextflow run annotate.nf --genome_assembly /path/to/my_genome.fa --rna_reads /path/to/rna/reads --nthreads 64
 
 # Run FeatureFlow in interpro mode
 nextflow run annotate.nf --runMode interPro --braker_aa /path/to/braker.aa --braker_gff /path/to/braker.gff3
