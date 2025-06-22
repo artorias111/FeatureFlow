@@ -5,7 +5,7 @@ A pipeline for genome annotation (On Polar2020) including repeat masking, gene p
 
 - Nextflow: `conda activate /data2/work/local/miniconda/envs/nextflow`
 - Access to reference data (protein references, RNA-seq reads for genome annotation)
-- RNA-seq reads for annotation must all be in one directory, which is passed to the script with the `--rna-reads` flag
+- RNA-seq reads for annotation must all be in one directory, which is passed to the script with the `--rna_reads` flag
 
 ## Quick Start
 
