@@ -18,24 +18,24 @@ for f in files_list:
     if '.fastq.gz' in f:
         curr_file = f
         original_file = rna_path / f 
-        
-        if 'R1' in f:
+ 
+        if '_1.fastq' in curr_file:  # Check if they're SRA files first
+            Path(curr_file).symlink_to(original_file)
+            curr_file = curr_file.replace('_1.fastq.gz', '') # this line is screwed up
+
+        elif '_2.fastq' in curr_file: 
+            Path(curr_file).symlink_to(original_file)
+            curr_file = curr_file.replace('_2.fastq.gz', '') # this line is screwed up
+       
+        elif 'R1' in f:
             curr_file = re.sub(r'R1.*?\.fastq\.gz', '1.fastq.gz', f)
 
         elif 'R2' in f:
             curr_file = re.sub(r'R2.*?\.fastq\.gz', '2.fastq.gz', f)
 
 
-        if '_1.fastq' in curr_file: 
-            Path(curr_file).symlink_to(original_file)
-            curr_file = curr_file.replace('_1.fastq.gz', '')
-
-        elif '_2.fastq' in curr_file: 
-            Path(curr_file).symlink_to(original_file)
-            curr_file = curr_file.replace('_2.fastq.gz', '')
-
-
     ID_list.append(curr_file)
+    # print(curr_file) # dbg - there's a problem here!
 
 ID_list = set(ID_list)
 
