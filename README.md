@@ -1,5 +1,5 @@
 # FeatureFlow
-A pipeline for genome annotation (On Polar2020) including repeat masking, gene prediction, and functional annotation.
+A pipeline for genome annotation (On Polar2020) consisting of repeat masking, gene prediction, and functional annotation.
 
 ## Prerequisites
 
