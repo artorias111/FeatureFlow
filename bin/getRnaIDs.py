@@ -33,9 +33,12 @@ for f in files_list:
         elif 'R2' in f:
             curr_file = re.sub(r'R2.*?\.fastq\.gz', '2.fastq.gz', f)
 
+    else:
+        continue # ignore non-fastq.gz files
 
     ID_list.append(curr_file)
     # print(curr_file) # dbg - there's a problem here!
+
 
 ID_list = set(ID_list)
 
