@@ -13,6 +13,18 @@ A pipeline for genome annotation (On Polar2020) including repeat masking, gene p
 # Load nextflow onto your environment
 conda activate /data2/work/local/miniconda/envs/nextflow
 
+# run FeatureFlow
+nextflow run artorias111/FeatureFlow --genome_assembly /path/to/my_genome.fa --rna_reads /path/to/rna/reads --nthreads 64
+
+# run Featureflow in a specific mode (see below for the full list of modes)
+nextflow run artorias111/FeatureFlow --runMode interPro --braker_aa /path/to/braker.aa --braker_gff /path/to/braker.gff3
+```
+
+## A (slightly) longer way to go about it, if you want to explore and change local code
+```bash
+# Load nextflow onto your environment
+conda activate /data2/work/local/miniconda/envs/nextflow
+
 # clone this repo
 git clone https://github.com/artorias111/FeatureFlow.git
 # rename the folder to make more sense
@@ -20,20 +32,20 @@ mv FeatureFlow Dmaw12_annotations
 cd Dmaw12_annotations
 
 # Run FeatureFlow's entire pipeline
-nextflow run annotate.nf --genome_assembly /path/to/my_genome.fa --rna_reads /path/to/rna/reads --nthreads 64
+nextflow run main.nf --genome_assembly /path/to/my_genome.fa --rna_reads /path/to/rna/reads --nthreads 64
 
 # Run FeatureFlow in interpro mode
-nextflow run annotate.nf --runMode interPro --braker_aa /path/to/braker.aa --braker_gff /path/to/braker.gff3
+nextflow run main.nf --runMode interPro --braker_aa /path/to/braker.aa --braker_gff /path/to/braker.gff3
 
 # Show help message
-nextflow run annotate.nf --help
+nextflow run main.nf --help
 ```
 
 ## Usage scenarios
 There are situations where you've run RepeatMasker after assembling your genome, and now you want to run the rest of this pipeline, without running repeatmasker again. That's possible, via different run modes of FeatureFlow, provided with the `--runMode` flag. A list of all Run Modes are in the "Run Modes" section below. \
 If you want to run the pipeline starting from braker: 
 ```bash
-nextflow run annotate.nf --runMode braker_interpro --genome_assembly /path/to/masked/assembly.fa --rna_reads /path/to/rna_seq/read/dir
+nextflow run main.nf --runMode braker_interpro --genome_assembly /path/to/masked/assembly.fa --rna_reads /path/to/rna_seq/read/dir
 ```
 
 ## Run Modes
@@ -78,7 +90,7 @@ Another set of outputs includes the standard `work` directory produced by Nextfl
 For advanced configuration, you can edit the parameters directly in the `nextflow.config` file. However, this is not a recommended option, and is primarily targeted for development use only. There's also some workflows that's only available for dev. For more information, see the help message:
 
 ```bash
-nextflow run annotate.nf --help
+nextflow run main.nf --help
 ```
 
 ## tools used in this annotation pipeline
