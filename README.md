@@ -54,6 +54,7 @@ FeatureFlow can be run in different modes, depending on the use case. A list of 
 | Run mode | Flag | Description |
 |----------|------|-------------|
 | full     | `--runMode full` | entire pipeline, requires `--genome_assembly` and `--rna_reads` |
+|repeatMask |`--runMode repeatMask`| run RepeatModeler, RepeatMasker, and KimuraDiverge, only requires `--genome_assembly` |
 | braker+interpro|`--runMode braker_interpro`| Run braker, followed by interproscan, and combine the two results. Ideal if you've already run repeatmasker |
 | braker | `--runMode braker` | only braker, expects you to provide a masked genome assembly via `--genome_assembly`. Also requires `--rna_reads` |
 |interPro | `--runMode interPro` | only interPro, expects you to provide an amino acid sequence file via `--braker_aa`, and the braker gff to combine the interpro results with `--braker_gff` |

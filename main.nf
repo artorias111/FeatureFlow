@@ -157,6 +157,27 @@ workflow braker_only { // --runMode braker
 
 }
 
+// repeatmask only
+
+workflow repeatmask_only {
+    log.info ""
+    log.info "FeatureFlow: RepeatMask"
+    log.info "==============================="
+    log.info "Genome assembly: ${params.genome_assembly}"
+    log.info "Threads        : ${params.nthreads}"
+    log.info ""
+
+    genome_ch = Channel.fromPath(params.genome_assembly)
+
+    ModelRepeats(genome_ch)
+    createCuratedRepeats(ModelRepeats.out)
+    MaskRepeats(genome_ch, createCuratedRepeats.out)
+
+    // Kimura divergence
+    createKimuraDivergencePlots(MaskRepeats.out.rm_cat_file, MaskRepeats.out.rm_tbl_file)
+
+}
+
     
 // full pipeline
 
@@ -214,5 +235,9 @@ workflow {
 
     if (params.runMode == 'agat') {
         agat_only()
+    }
+
+    if (params.runMode == 'repeatMask') {
+        repeatmask_only()
     }
 }
