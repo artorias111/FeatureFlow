@@ -55,6 +55,7 @@ include { getRnaIDs } from './modules/get_rna_ids.nf'
 include { runInterPro } from './modules/interpro.nf'
 include { cleanBrakerAA } from './modules/clean_braker_aa.nf'
 include { combine_interpro_braker } from './modules/agat.nf'
+include { runBrakerBusco } from './modules/Busco.nf'
 
 // phased out
 // include { getCdna } from './modules/gffread.nf'
@@ -110,6 +111,7 @@ workflow braker_interpro { // --runMode braker_interpro
     cleanBrakerAA(runBraker3.out.aa_seqs)
     runInterPro(cleanBrakerAA.out)
     combine_interpro_braker(runBraker3.out.braker_annots, runInterPro.out.interpro_tsv)
+    runBrakerBusco(cleanBrakerAA.out)
 }
 
 workflow interPro_only { // --runMode interPro
@@ -154,6 +156,7 @@ workflow braker_only { // --runMode braker
 
     getRnaIDs(params.rna_reads)
     runBraker3(params.genome_assembly, getRnaIDs.out.renamed_reads_path, params.protein_ref, getRnaIDs.out.ID_list)
+    runBrakerBusco(runBraker3.out.aa_seqs)
 
 }
 
@@ -212,6 +215,7 @@ workflow full_pipeline {
     cleanBrakerAA(runBraker3.out.aa_seqs)
     runInterPro(cleanBrakerAA.out)
     combine_interpro_braker(runBraker3.out.braker_annots, runInterPro.out.interpro_tsv)
+    runBrakerBusco(cleanBrakerAA.out)
 
 }
 
