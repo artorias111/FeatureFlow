@@ -12,7 +12,7 @@ process createCuratedRepeats {
 
     script:
     """
-    cat asm.db-families.fa $params.protein_ref > curated_repeats.fa
+    cat asm.db-families.fa $params.rm_ref > curated_repeats.fa
     """
 
 }
