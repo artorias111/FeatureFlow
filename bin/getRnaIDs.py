@@ -24,13 +24,13 @@ for f in files_list:
             curr_file = curr_file.replace('_1.fastq.gz', '') # this line is screwed up
 
         elif '_2.fastq' in curr_file: 
-            Path(curr_file).symlink_to(original_file)
             curr_file = curr_file.replace('_2.fastq.gz', '') # this line is screwed up
+            Path(curr_file).symlink_to(original_file)
        
         elif 'R1' in f:
-            Path(curr_file).symlink_to(original_file)
             curr_file = re.sub(r'R1.*?\.fastq\.gz', '1.fastq.gz', f)
-
+            Path(curr_file).symlink_to(original_file)
+            
         elif 'R2' in f:
             Path(curr_file).symlink_to(original_file)
             curr_file = re.sub(r'R2.*?\.fastq\.gz', '2.fastq.gz', f)
