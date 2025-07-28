@@ -21,32 +21,49 @@ for f in files_list:
  
         # Handle SRA-style files: SRR123456_1.fastq.gz, SRR123456_2.fastq.gz
         if '_1.fastq.gz' in curr_file:
-            # Create symlink with the base name (without _1.fastq.gz)
+            # Create symlink with the base name + _1.fastq.gz
             base_name = curr_file.replace('_1.fastq.gz', '')
-            Path(base_name).symlink_to(original_file)
-            curr_file = base_name
+            symlink_name = f"{base_name}_1.fastq.gz"
+            # Remove existing symlink if it exists
+            if Path(symlink_name).exists():
+                Path(symlink_name).unlink()
+            Path(symlink_name).symlink_to(original_file)
+            curr_file = symlink_name
 
         elif '_2.fastq.gz' in curr_file:
-            # Create symlink with the base name (without _2.fastq.gz)
+            # Create symlink with the base name + _2.fastq.gz
             base_name = curr_file.replace('_2.fastq.gz', '')
-            Path(base_name).symlink_to(original_file)
-            curr_file = base_name
+            symlink_name = f"{base_name}_2.fastq.gz"
+            # Remove existing symlink if it exists
+            if Path(symlink_name).exists():
+                Path(symlink_name).unlink()
+            Path(symlink_name).symlink_to(original_file)
+            curr_file = symlink_name
        
         # Handle Illumina-style files: sample_R1_001.fastq.gz, sample_R2_001.fastq.gz
         elif '_R1_' in curr_file:
             # Create symlink with simplified name: sample_1.fastq.gz
             simplified_name = re.sub(r'_R1_\d+\.fastq\.gz', '_1.fastq.gz', curr_file)
+            # Remove existing symlink if it exists
+            if Path(simplified_name).exists():
+                Path(simplified_name).unlink()
             Path(simplified_name).symlink_to(original_file)
             curr_file = simplified_name
             
         elif '_R2_' in curr_file:
             # Create symlink with simplified name: sample_2.fastq.gz
             simplified_name = re.sub(r'_R2_\d+\.fastq\.gz', '_2.fastq.gz', curr_file)
+            # Remove existing symlink if it exists
+            if Path(simplified_name).exists():
+                Path(simplified_name).unlink()
             Path(simplified_name).symlink_to(original_file)
             curr_file = simplified_name
 
-        # If no pattern matches, just use the original filename (I'm not sure if this is the right way to go about this)
+        # If no pattern matches, just use the original filename
         else:
+            # Remove existing symlink if it exists
+            if Path(curr_file).exists():
+                Path(curr_file).unlink()
             Path(curr_file).symlink_to(original_file)
 
     else:
