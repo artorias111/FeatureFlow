@@ -19,27 +19,67 @@ for f in files_list:
         curr_file = f
         original_file = rna_path / f 
  
-        if '_1.fastq' in curr_file:  # Check if they're SRA files first
-            Path(curr_file).symlink_to(original_file)
-            curr_file = curr_file.replace('_1.fastq.gz', '') # this line is screwed up
+        # Handle SRA-style files: SRR123456_1.fastq.gz, SRR123456_2.fastq.gz
+        if '_1.fastq.gz' in curr_file:
+            # Create symlink with the base name + _1.fastq.gz
+            base_name = curr_file.replace('_1.fastq.gz', '')
+            symlink_name = f"{base_name}_1.fastq.gz"
+            # Remove existing symlink if it exists
+            if Path(symlink_name).exists():
+                Path(symlink_name).unlink()
+            Path(symlink_name).symlink_to(original_file)
+            curr_file = symlink_name
 
-        elif '_2.fastq' in curr_file: 
-            Path(curr_file).symlink_to(original_file)
-            curr_file = curr_file.replace('_2.fastq.gz', '') # this line is screwed up
+        elif '_2.fastq.gz' in curr_file:
+            # Create symlink with the base name + _2.fastq.gz
+            base_name = curr_file.replace('_2.fastq.gz', '')
+            symlink_name = f"{base_name}_2.fastq.gz"
+            # Remove existing symlink if it exists
+            if Path(symlink_name).exists():
+                Path(symlink_name).unlink()
+            Path(symlink_name).symlink_to(original_file)
+            curr_file = symlink_name
        
-        elif 'R1' in f:
-            curr_file = re.sub(r'R1.*?\.fastq\.gz', '1.fastq.gz', f)
+        # Handle Illumina-style files: sample_R1_001.fastq.gz, sample_R2_001.fastq.gz
+        elif '_R1_' in curr_file:
+            # Create symlink with simplified name: sample_1.fastq.gz
+            simplified_name = re.sub(r'_R1_\d+\.fastq\.gz', '_1.fastq.gz', curr_file)
+            # Remove existing symlink if it exists
+            if Path(simplified_name).exists():
+                Path(simplified_name).unlink()
+            Path(simplified_name).symlink_to(original_file)
+            curr_file = simplified_name
+            
+        elif '_R2_' in curr_file:
+            # Create symlink with simplified name: sample_2.fastq.gz
+            simplified_name = re.sub(r'_R2_\d+\.fastq\.gz', '_2.fastq.gz', curr_file)
+            # Remove existing symlink if it exists
+            if Path(simplified_name).exists():
+                Path(simplified_name).unlink()
+            Path(simplified_name).symlink_to(original_file)
+            curr_file = simplified_name
 
-        elif 'R2' in f:
-            curr_file = re.sub(r'R2.*?\.fastq\.gz', '2.fastq.gz', f)
+        # If no pattern matches, just use the original filename
+        else:
+            # Remove existing symlink if it exists
+            if Path(curr_file).exists():
+                Path(curr_file).unlink()
+            Path(curr_file).symlink_to(original_file)
 
     else:
         continue # ignore non-fastq.gz files
 
-    ID_list.append(curr_file)
-    # print(curr_file) # dbg - there's a problem here!
+    # Extract base name by removing _1.fastq.gz or _2.fastq.gz suffixes
+    if curr_file.endswith('_1.fastq.gz'):
+        base_id = curr_file.replace('_1.fastq.gz', '')
+    elif curr_file.endswith('_2.fastq.gz'):
+        base_id = curr_file.replace('_2.fastq.gz', '')
+    else:
+        # For files that don't match the expected patterns, use the name as is
+        base_id = curr_file
+    
+    ID_list.append(base_id)
 
-
-ID_list = set(ID_list)
-
+# Remove duplicates and print
+ID_list = list(set(ID_list))
 print(",".join(map(str, ID_list)))
