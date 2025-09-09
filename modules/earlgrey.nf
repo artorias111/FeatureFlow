@@ -16,7 +16,6 @@ process annotate_TEs {
     -s ${species_name} \
     -o EarlGrey \
     -d yes \
-    -r eukarya \
     -t {params.nthreads}
     """
 }
