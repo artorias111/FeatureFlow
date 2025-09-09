@@ -51,6 +51,16 @@ process runBraker3_bams { // pre-aligned files used instead of rna reads directl
     container "${params.braker_docker_image}"
     containerOptions "--bind /data2/work/local/braker3/config:/augustus_config"
 
+    cpus {
+        // Make sure nthreads does not exceed 48, GeneMark doesn't like it
+
+        if(params.nthreads < 48) {
+            return params.nthreads
+        } else {
+            return 48
+        }
+    }
+
     input:
     path masked_assembly
     path bam
