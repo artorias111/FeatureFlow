@@ -111,10 +111,10 @@ workflow braker_bam {
 
     // getRnaIDs(params.rna_reads)
     runBraker3_bams(params.genome_assembly, params.braker_bam, params.protein_ref)
-    runBrakerBusco(runBraker3.out.aa_seqs)
-    cleanBrakerAA(runBraker3.out.aa_seqs)
+    runBrakerBusco(runBraker3_bams.out.aa_seqs)
+    cleanBrakerAA(runBraker3_bams.out.aa_seqs)
     runInterPro(cleanBrakerAA.out)
-    combine_interpro_braker(runBraker3.out.braker_annots, runInterPro.out.interpro_tsv)
+    combine_interpro_braker(runBraker3_bams.out.braker_annots, runInterPro.out.interpro_tsv)
 }
 
 
