@@ -8,12 +8,15 @@ process annotate_TEs {
     val species_name
 
     output:
-    path EarlGrey
+    path 'EarlGrey'
 
     script:
     """
     earlGrey -g ${genome_asm} \
     -s ${species_name} \
-    -o EarlGrey
+    -o EarlGrey \
+    -d yes \
+    -r eukarya \
+    -t {params.nthreads}
     """
 }
