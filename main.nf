@@ -50,6 +50,7 @@ include { ModelRepeats } from './modules/RepeatModeler.nf'
 include { createCuratedRepeats } from './modules/RepeatMasker.nf'
 include { MaskRepeats } from './modules/RepeatMasker.nf'
 include { runBraker3 } from './modules/braker3.nf'
+include { runBraker3_bams } from './modules/braker3.nf'
 include { createKimuraDivergencePlots } from './modules/RepeatMasker.nf'
 include { getRnaIDs } from './modules/get_rna_ids.nf'
 include { runInterPro } from './modules/interpro.nf'
@@ -92,6 +93,33 @@ workflow agat_only { // --runMode agat
 
 
 // Legit workflows
+
+
+// braker_bams
+
+workflow braker_bam { 
+
+    // Log pipeline info
+    log.info ""
+    log.info "FeatureFlow: braker mode"
+    log.info "==============================="
+    log.info "Genome assembly: ${params.genome_assembly}"
+    log.info "BAM file with aligned RNA reads : ${params.braker_bam}"
+    log.info "Protein ref    : ${params.protein_ref}"
+    log.info "Threads        : ${params.nthreads}"
+    log.info ""
+
+    // getRnaIDs(params.rna_reads)
+    runBraker3_bams(params.genome_assembly, params.braker_bam, params.protein_ref)
+    runBrakerBusco(runBraker3_bams.out.aa_seqs)
+    cleanBrakerAA(runBraker3_bams.out.aa_seqs)
+    runInterPro(cleanBrakerAA.out)
+    combine_interpro_braker(runBraker3_bams.out.braker_annots, runInterPro.out.interpro_tsv)
+}
+
+
+
+
 
 // interpro only
 
@@ -243,5 +271,9 @@ workflow {
 
     if (params.runMode == 'repeatMask') {
         repeatmask_only()
+    }
+    
+    if (params.runMode == 'braker_bam') {
+        braker_bam()
     }
 }
