@@ -97,7 +97,7 @@ workflow agat_only { // --runMode agat
 
 // braker_bams
 
-runmode braker_bam { 
+workflow braker_bam { 
 
     // Log pipeline info
     log.info ""
@@ -110,7 +110,7 @@ runmode braker_bam {
     log.info ""
 
     // getRnaIDs(params.rna_reads)
-    runBraker3(params.genome_assembly, params.braker_bam, params.protein_ref)
+    runBraker3_bams(params.genome_assembly, params.braker_bam, params.protein_ref)
     runBrakerBusco(runBraker3.out.aa_seqs)
     cleanBrakerAA(runBraker3.out.aa_seqs)
     runInterPro(cleanBrakerAA.out)
