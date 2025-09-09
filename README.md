@@ -58,7 +58,7 @@ FeatureFlow can be run in different modes, depending on the use case. A list of 
 | braker+interpro|`--runMode braker_interpro`| Run braker, followed by interproscan, and combine the two results. Ideal if you've already run repeatmasker |
 | braker | `--runMode braker` | only braker, expects you to provide a masked genome assembly via `--genome_assembly`. Also requires `--rna_reads` |
 |interPro | `--runMode interPro` | only interPro, expects you to provide an amino acid sequence file via `--braker_aa`, and the braker gff to combine the interpro results with `--braker_gff` |
-| braker_bam | `--runMode braker_bam` | You have a merged bam file that already contains the aligned reads, and you want to run Braker with this pre-aligned file. Requires a masked assembly with `--genome_assembly`|
+| braker_bam | `--runMode braker_bam` | You have a merged bam file that already contains the aligned reads, and you want to run Braker with this pre-aligned file. Requires a masked assembly with `--genome_assembly` and the bam file with `--braker_bam`|
 
 
 

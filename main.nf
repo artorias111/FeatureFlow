@@ -261,7 +261,6 @@ workflow {
 
     if (params.runMode == 'full') {
         full_pipeline()
-        rk
     }
 
     // testing
@@ -274,7 +273,7 @@ workflow {
         repeatmask_only()
     }
     
-    if (params.runMode == 'brakerBam') {
+    if (params.runMode == 'braker_bam') {
         braker_bam()
     }
 }
