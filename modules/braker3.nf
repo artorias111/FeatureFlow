@@ -46,6 +46,39 @@ process runBraker3 {
 }
 
 
+process runBraker3_bams { // pre-aligned files used instead of rna reads directly in the script
+    publishDir 'results/Braker3', mode: 'symlink'
+    container "${params.braker_docker_image}"
+    containerOptions "--bind /data2/work/local/braker3/config:/augustus_config"
+
+    input:
+    path masked_assembly
+    path bam
+    path protein_ref
+    
+    output:
+    path 'braker/braker.gff3', emit: braker_annots
+    path 'braker/braker.aa', emit: aa_seqs
+
+    script:
+    """
+    mkdir -p augustus_config_dir/species
+    cp -rv /opt/Augustus/config/* augustus_config_dir/
+    export AUGUSTUS_CONFIG_PATH=\${PWD}/augustus_config_dir
+
+    braker.pl --genome=${masked_assembly} \
+    --prot_seq=${protein_ref} \
+    --bam=${bam} \
+    --gff3 --threads=${task.cpus} \
+    --softmasking \
+    --AUGUSTUS_ab_initio \
+    --AUGUSTUS_CONFIG_PATH=${PWD}/augustus_config_dir \
+    --busco_lineage=actinopterygii
+    """
+
+}
+
+
 process getRnaIDs {
 
     input:
