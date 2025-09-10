@@ -3,7 +3,7 @@
 process ModelRepeats {
     conda '/data2/work/local/miniconda/envs/RepeatMask'
 
-    publishDir 'results/RepeatModeler', mode: 'copy'
+    publishDir 'results/RepeatModeler', mode: 'symlink'
 
     input:
     path genome_assembly

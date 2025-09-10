@@ -2,7 +2,7 @@
 
 
 process createCuratedRepeats {
-    publishDir 'results/CuratedRepeatsForRepeatMasker', mode: 'copy'
+    publishDir 'results/CuratedRepeatsForRepeatMasker', mode: 'symlink'
 
     input:
     path 'asm.db-families.fa'
@@ -20,7 +20,7 @@ process createCuratedRepeats {
 process MaskRepeats {
     conda '/data2/work/local/miniconda/envs/RepeatMask'
 
-    publishDir 'results/RepeatMasker', mode: 'copy'
+    publishDir 'results/RepeatMasker', mode: 'symlink'
 
     input:
     path genome_assembly
@@ -45,7 +45,7 @@ process MaskRepeats {
 process createKimuraDivergencePlots {
     conda '/data2/work/local/miniconda/envs/RepeatMask'
 
-    publishDir 'results/KimuraDivergence', mode: 'copy'
+    publishDir 'results/KimuraDivergence', mode: 'symlink'
     
     input:
     path rm_cat_file
