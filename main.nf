@@ -251,6 +251,11 @@ workflow full_pipeline {
 // entry point to `nextflow run`: 
 
 workflow {
+    if (params.runMode == 'braker_interpro' {
+        braker_interpro()
+    }
+
+
     if (params.runMode == 'interPro') { 
         interPro_only()
     }
@@ -263,12 +268,6 @@ workflow {
         full_pipeline()
     }
 
-    // testing
-
-    if (params.runMode == 'agat') {
-        agat_only()
-    }
-
     if (params.runMode == 'repeatMask') {
         repeatmask_only()
     }
@@ -276,4 +275,13 @@ workflow {
     if (params.runMode == 'braker_bam') {
         braker_bam()
     }
+
+
+    // testing 
+
+    if (params.runMode == 'agat') {
+        agat_only()
+    }
+
+
 }
