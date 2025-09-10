@@ -1,5 +1,5 @@
 process annotate_TEs { 
-    publishDir 'results', mode: 'copy'
+    publishDir 'results', mode: 'symlink'
     
     conda '/data2/work/local/miniconda/envs/earlgrey'
 

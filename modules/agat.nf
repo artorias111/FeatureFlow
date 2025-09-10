@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 process combine_interpro_braker {
-    publishDir 'results/agat', mode: 'copy'
+    publishDir 'results/agat', mode: 'symlink'
 
     conda '/data2/work/local/miniconda/envs/agat'
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 
 process runInterPro {
-    publishDir 'results/InterPro', mode: 'copy'
+    publishDir 'results/InterPro', mode: 'symlink'
 
     input:
     path cds_fasta

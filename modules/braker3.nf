@@ -2,7 +2,7 @@
 
 
 process runBraker3 {
-    publishDir 'results/Braker3', mode: 'copy'
+    publishDir 'results/Braker3', mode: 'symlink'
     container "${params.braker_docker_image}"
     containerOptions "--bind /data2/work/local/braker3/config:/augustus_config"
 
