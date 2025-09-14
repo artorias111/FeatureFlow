@@ -51,6 +51,7 @@ include { createCuratedRepeats } from './modules/RepeatMasker.nf'
 include { MaskRepeats } from './modules/RepeatMasker.nf'
 include { runBraker3 } from './modules/braker3.nf'
 include { runBraker3_bams } from './modules/braker3.nf'
+include { runBraker3Proteins } from './modules/braker3.nf'
 include { createKimuraDivergencePlots } from './modules/RepeatMasker.nf'
 include { getRnaIDs } from './modules/get_rna_ids.nf'
 include { runInterPro } from './modules/interpro.nf'
@@ -246,7 +247,48 @@ workflow full_pipeline {
     runBrakerBusco(cleanBrakerAA.out)
 
 }
+// ----------------
+// Protein-only pipelines
 
+workflow protein_only_full {
+    log.info ""
+    log.info "Featureflow (protein reference only): Complete pipeline"
+    log.info "==============================="
+    log.info "Genome assembly: ${params.genome_assembly}"
+    log.info "Protein ref    : ${params.protein_ref}"
+    log.info "Threads        : ${params.nthreads}"
+    log.info ""
+
+    genome_ch = Channel.fromPath(params.genome_assembly)
+
+    // call your repeatmasking processes
+    ModelRepeats(genome_ch)
+    createCuratedRepeats(ModelRepeats.out)
+    MaskRepeats(genome_ch, createCuratedRepeats.out)
+
+    // Kimura divergence
+    createKimuraDivergencePlots(MaskRepeats.out.rm_cat_file, MaskRepeats.out.rm_tbl_file)
+
+
+    // helper function for braker, followed by braker
+    runBraker3(MaskRepeats.out.masked_file, params.protein_ref)
+
+    // Functional annotation
+    // getCdna(MaskRepeats.out.masked_file, runBraker3.out.braker_annots)
+    cleanBrakerAA(runBraker3.out.aa_seqs)
+    runInterPro(cleanBrakerAA.out)
+    combine_interpro_braker(runBraker3.out.braker_annots, runInterPro.out.interpro_tsv)
+    runBrakerBusco(cleanBrakerAA.out)
+
+
+
+
+
+
+
+// ----------------
+//
+// ----------------
 
 // entry point to `nextflow run`: 
 
@@ -274,6 +316,10 @@ workflow {
     
     if (params.runMode == 'braker_bam') {
         braker_bam()
+    }
+
+    if (params.runMode) == 'protein_only' {
+        protein_only_full()
     }
 
 
