@@ -288,7 +288,7 @@ workflow brakerp_only {
     log.info ""
     log.info "FeatureFlow: braker mode (with protein only)"
     log.info "==============================="
-    log.info "Genome assembly: ${params.genome_assembly}"
+    log.info "Masked genome assembly: ${params.genome_assembly}"
     log.info "Protein ref    : ${params.protein_ref}"
     log.info "Threads        : ${params.nthreads}"
     log.info ""
