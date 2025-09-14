@@ -276,7 +276,7 @@ workflow protein_only_full {
     // Functional annotation
     // getCdna(MaskRepeats.out.masked_file, runBraker3.out.braker_annots)
     cleanBrakerAA(runBraker3Proteins.out.aa_seqs)
-    runInterPro(cleanBraker3Proteins.out)
+    runInterPro(cleanBrakerAA.out)
     combine_interpro_braker(runBraker3Proteins.out.braker_annots, runInterPro.out.interpro_tsv)
     runBrakerBusco(cleanBrakerAA.out)
 
