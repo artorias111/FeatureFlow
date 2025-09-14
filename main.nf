@@ -293,7 +293,7 @@ workflow brakerp_only {
     log.info "Threads        : ${params.nthreads}"
     log.info ""
 
-    runBraker3Proteins(MaskRepeats.out.masked_file, params.protein_ref)
+    runBraker3Proteins(params.genome_assembly, params.protein_ref)
     runBrakerBusco(runBraker3_bams.out.aa_seqs)
     cleanBrakerAA(runBraker3_bams.out.aa_seqs)
     runInterPro(cleanBrakerAA.out)
