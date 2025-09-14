@@ -275,9 +275,9 @@ workflow protein_only_full {
 
     // Functional annotation
     // getCdna(MaskRepeats.out.masked_file, runBraker3.out.braker_annots)
-    cleanBrakerAA(runBraker3.out.aa_seqs)
-    runInterPro(cleanBrakerAA.out)
-    combine_interpro_braker(runBraker3.out.braker_annots, runInterPro.out.interpro_tsv)
+    cleanBrakerAA(runBraker3Proteins.out.aa_seqs)
+    runInterPro(cleanBraker3Proteins.out)
+    combine_interpro_braker(runBraker3Proteins.out.braker_annots, runInterPro.out.interpro_tsv)
     runBrakerBusco(cleanBrakerAA.out)
 
 }
@@ -294,10 +294,10 @@ workflow brakerp_only {
     log.info ""
 
     runBraker3Proteins(params.genome_assembly, params.protein_ref)
-    runBrakerBusco(runBraker3_bams.out.aa_seqs)
-    cleanBrakerAA(runBraker3_bams.out.aa_seqs)
+    runBrakerBusco(runBraker3Proteins.out.aa_seqs)
+    cleanBrakerAA(runBraker3Proteins.out.aa_seqs)
     runInterPro(cleanBrakerAA.out)
-    combine_interpro_braker(runBraker3_bams.out.braker_annots, runInterPro.out.interpro_tsv)
+    combine_interpro_braker(runBraker3Proteins.out.braker_annots, runInterPro.out.interpro_tsv)
 }
 
 
