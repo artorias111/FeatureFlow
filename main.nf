@@ -271,7 +271,7 @@ workflow protein_only_full {
 
 
     // helper function for braker, followed by braker
-    runBraker3(MaskRepeats.out.masked_file, params.protein_ref)
+    runBraker3Proteins(MaskRepeats.out.masked_file, params.protein_ref)
 
     // Functional annotation
     // getCdna(MaskRepeats.out.masked_file, runBraker3.out.braker_annots)
@@ -280,7 +280,25 @@ workflow protein_only_full {
     combine_interpro_braker(runBraker3.out.braker_annots, runInterPro.out.interpro_tsv)
     runBrakerBusco(cleanBrakerAA.out)
 
+}
 
+
+workflow brakerp_only { 
+    // Log pipeline info
+    log.info ""
+    log.info "FeatureFlow: braker mode (with protein only)"
+    log.info "==============================="
+    log.info "Genome assembly: ${params.genome_assembly}"
+    log.info "Protein ref    : ${params.protein_ref}"
+    log.info "Threads        : ${params.nthreads}"
+    log.info ""
+
+    runBraker3Proteins(MaskRepeats.out.masked_file, params.protein_ref)
+    runBrakerBusco(runBraker3_bams.out.aa_seqs)
+    cleanBrakerAA(runBraker3_bams.out.aa_seqs)
+    runInterPro(cleanBrakerAA.out)
+    combine_interpro_braker(runBraker3_bams.out.braker_annots, runInterPro.out.interpro_tsv)
+}
 
 
 
@@ -318,8 +336,12 @@ workflow {
         braker_bam()
     }
 
-    if (params.runMode) == 'protein_only' {
+    if (params.runMode == 'protein_only') {
         protein_only_full()
+    }
+
+    if (params.runMode == 'braker_protein_only') {
+        brakerp_only()
     }
 
 
