@@ -3,7 +3,7 @@
 process getCdna {
     conda '/data2/work/local/miniconda/envs/orthofinder'
 
-    publishDir 'results/gffreadCdna', mode: 'copy'
+    publishDir 'results/gffreadCdna', mode: 'symlink'
 
     input:
     path masked_assembly

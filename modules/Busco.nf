@@ -1,5 +1,5 @@
 process runBrakerBusco {
-    publishDir 'results/Braker3', mode: 'copy'
+    publishDir 'results/Braker3', mode: 'symlink'
 
     conda '/data2/work/local/miniconda/envs/busco583'
 

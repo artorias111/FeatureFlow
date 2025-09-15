@@ -3,7 +3,7 @@
 process run_busco {
     conda '/data2/work/local/miniconda/envs/busco/'
 
-    publishDir 'results/braker_benchmark', mode: 'copy'
+    publishDir 'results/braker_benchmark', mode: 'symlink'
 
     input:
     path aa_fa
