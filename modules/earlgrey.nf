@@ -9,6 +9,7 @@ process annotate_TEs {
 
     output:
     path 'EarlGrey'
+    path "EarlGrey/${species_name}EarlGrey/${species_name}_summaryFiles/${species_name}.softmasked.fasta", emit: masked_genome
 
     script:
     """
