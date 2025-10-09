@@ -1,5 +1,45 @@
 #!/usr/bin/env nextflow
 
+process runAugustusWithHints { 
+    publishDir 'results/Augustus', mode: 'symlink'
+    container "${params.braker_docker_image}"
+    containerOptions "--bind /data2/work/local/braker3/config:/augustus_config"
+
+    cpus {
+        // Make sure nthreads does not exceed 48, GeneMark doesn't like it
+
+        if(params.nthreads < 48) {
+            return params.nthreads
+        } else {
+            return 48
+        }
+    }
+
+    input:
+    path masked_assembly
+    
+    output:
+    path 'augustus_afgp.gff3'
+    
+    script:
+    """
+    mkdir -p augustus_config_dir/species
+    cp -rv /opt/Augustus/config/* augustus_config_dir/
+    export AUGUSTUS_CONFIG_PATH=\${PWD}/augustus_config_dir
+
+    augustus --species=zebrafish \
+        --hintsfile=${params.hintsfile} \
+        --gff3=on \
+        --allow_hinted_splicesites=gtag,gcag \
+        --alternatives-from-evidence=true \
+        --softmasking=1 \
+        --progress=true \
+        ${masked_assembly} > augustus_afgp.gff3
+
+    """
+
+} 
+
 
 process runBraker3 {
     publishDir 'results/Braker3', mode: 'symlink'
@@ -41,7 +81,7 @@ process runBraker3 {
     --softmasking \
     --AUGUSTUS_ab_initio \
     --AUGUSTUS_CONFIG_PATH=${PWD}/augustus_config_dir \
-    --busco_lineage=actinopterygii
+    --busco_lineage=actinopterygii \
     """
 }
 

@@ -58,6 +58,7 @@ include { runInterPro } from './modules/interpro.nf'
 include { cleanBrakerAA } from './modules/clean_braker_aa.nf'
 include { combine_interpro_braker } from './modules/agat.nf'
 include { runBrakerBusco } from './modules/Busco.nf'
+include { runAugustusWithHints } from './modules/braker3.nf'
 
 // phased out
 // include { getCdna } from './modules/gffread.nf'
@@ -300,6 +301,14 @@ workflow brakerp_only {
     combine_interpro_braker(runBraker3Proteins.out.braker_annots, runInterPro.out.interpro_tsv)
 }
 
+workflow augustus_hints {
+    log.info "FeatureFlow: Augustus with custom hints"
+    log.info "Masked genome assembly: ${params.genome_assembly}"
+
+    runAugustusWithHints(params.genome_assembly)
+}
+
+
 
 
 
@@ -342,6 +351,10 @@ workflow {
 
     if (params.runMode == 'braker_protein_only') {
         brakerp_only()
+    }
+
+    if (params.runMode == 'augustus_hints') { 
+        augustus_hints()
     }
 
 
