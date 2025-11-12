@@ -58,6 +58,7 @@ include { runInterPro } from './modules/interpro.nf'
 include { cleanBrakerAA } from './modules/clean_braker_aa.nf'
 include { combine_interpro_braker } from './modules/agat.nf'
 include { runBrakerBusco } from './modules/Busco.nf'
+include { annotate_TEs } from './modules/earlgrey.nf'
 
 // phased out
 // include { getCdna } from './modules/gffread.nf'
@@ -227,17 +228,18 @@ workflow full_pipeline {
     genome_ch = Channel.fromPath(params.genome_assembly)
 
     // call your repeatmasking processes
-    ModelRepeats(genome_ch)
-    createCuratedRepeats(ModelRepeats.out)
-    MaskRepeats(genome_ch, createCuratedRepeats.out)
+    // ModelRepeats(genome_ch)
+    // createCuratedRepeats(ModelRepeats.out)
+    // MaskRepeats(genome_ch, createCuratedRepeats.out)
 
     // Kimura divergence
-    createKimuraDivergencePlots(MaskRepeats.out.rm_cat_file, MaskRepeats.out.rm_tbl_file)
-
+    // createKimuraDivergencePlots(MaskRepeats.out.rm_cat_file, MaskRepeats.out.rm_tbl_file)
+    
+    annotate_TEs(genome_ch)
 
     // helper function for braker, followed by braker
     getRnaIDs(params.rna_reads)
-    runBraker3(MaskRepeats.out.masked_file, getRnaIDs.out.renamed_reads_path, params.protein_ref, getRnaIDs.out.ID_list)
+    runBraker3(annotate_TEs.out.masked_asm, getRnaIDs.out.renamed_reads_path, params.protein_ref, getRnaIDs.out.ID_list)
 
     // Functional annotation
     // getCdna(MaskRepeats.out.masked_file, runBraker3.out.braker_annots)

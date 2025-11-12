@@ -5,15 +5,17 @@ process annotate_TEs {
 
     input:
     path genome_asm
-    val species_name
 
     output:
-    path EarlGrey
+    path "EarlGrey/*_EarlGrey", emit: 'earlgrey_dir'
+    path "EarlGrey/*_EarlGrey/*_summaryFiles/*.softmasked.fasta", emit: 'masked_asm'
 
     script:
     """
     earlGrey -g ${genome_asm} \
-    -s ${species_name} \
-    -o EarlGrey
+    -s ${params.species_id} \
+    -o EarlGrey \
+    -t ${params.nthreads} \
+    -d yes
     """
 }
