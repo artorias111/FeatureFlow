@@ -14,7 +14,7 @@ A pipeline for genome annotation (On Polar2020) consisting of repeat masking, ge
 conda activate /data2/work/local/miniconda/envs/nextflow
 
 # run FeatureFlow
-nextflow run artorias111/FeatureFlow --genome_assembly /path/to/my_genome.fa --rna_reads /path/to/rna/reads --nthreads 64
+nextflow run artorias111/FeatureFlow --genome_assembly /path/to/my_genome.fa --rna_reads /path/to/rna/reads --species_id my_species --nthreads 64
 
 # run Featureflow in a specific mode (see below for the full list of modes)
 nextflow run artorias111/FeatureFlow --runMode interPro --braker_aa /path/to/braker.aa --braker_gff /path/to/braker.gff3
