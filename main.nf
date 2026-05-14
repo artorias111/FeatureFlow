@@ -60,6 +60,8 @@ include { combine_interpro_braker } from './modules/agat.nf'
 include { runBrakerBusco } from './modules/Busco.nf'
 include { annotate_TEs } from './modules/earlgrey.nf'
 
+include { runBraker4 } from './modules/braker4.nf'
+
 // phased out
 // include { getCdna } from './modules/gffread.nf'
 // include { getRnaIDs } from './modules/braker3.nf'
@@ -238,8 +240,9 @@ workflow full_pipeline {
     annotate_TEs(genome_ch)
 
     // helper function for braker, followed by braker
-    getRnaIDs(params.rna_reads)
-    runBraker3(annotate_TEs.out.masked_asm, getRnaIDs.out.renamed_reads_path, params.protein_ref, getRnaIDs.out.ID_list)
+    // getRnaIDs(params.rna_reads)
+    //runBraker3(annotate_TEs.out.masked_asm, getRnaIDs.out.renamed_reads_path, params.protein_ref, getRnaIDs.out.ID_list)
+    runBraker4(genome_ch, annotate_TEs.out.masked_asm, params.rna_reads, params.protein_ref)
 
     // Functional annotation
     // getCdna(MaskRepeats.out.masked_file, runBraker3.out.braker_annots)
