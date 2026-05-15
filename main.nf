@@ -237,7 +237,7 @@ workflow full_pipeline {
     // Kimura divergence
     // createKimuraDivergencePlots(MaskRepeats.out.rm_cat_file, MaskRepeats.out.rm_tbl_file)
     
-    // annotate_TEs(genome_ch)
+   annotate_TEs(genome_ch)
 
     // helper function for braker, followed by braker
     // getRnaIDs(params.rna_reads)
