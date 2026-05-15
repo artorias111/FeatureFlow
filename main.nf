@@ -237,18 +237,28 @@ workflow full_pipeline {
     // Kimura divergence
     // createKimuraDivergencePlots(MaskRepeats.out.rm_cat_file, MaskRepeats.out.rm_tbl_file)
     
-    annotate_TEs(genome_ch)
+    // annotate_TEs(genome_ch)
 
     // helper function for braker, followed by braker
     // getRnaIDs(params.rna_reads)
     //runBraker3(annotate_TEs.out.masked_asm, getRnaIDs.out.renamed_reads_path, params.protein_ref, getRnaIDs.out.ID_list)
-    runBraker4(genome_ch, annotate_TEs.out.masked_asm, params.rna_reads, params.protein_ref)
+    
+
+    rna_ch = channel.fromPath("${params.rna_reads}/*_{1,2}*.fastq*").collect()
+    // DEBUG Only
+    // masked_path = Channel.fromPath('/data2/work/Notothenioids/Dmaw12/Dmaw12_simple-asm_annotations/work/31/be17ba95ffed75769c388f318e9e0d/EarlGrey/Dmaw_EarlGrey/Dmaw_summaryFiles/Dmaw.softmasked.fasta')
+
+
+    // runBraker4(genome_ch, masked_path, rna_ch, params.protein_ref)
+    // END DEBUG
+    
+    runBraker4(genome_ch, annotate_TEs.out.masked_asm, rna_ch, params.protein_ref)
 
     // Functional annotation
     // getCdna(MaskRepeats.out.masked_file, runBraker3.out.braker_annots)
-    cleanBrakerAA(runBraker3.out.aa_seqs)
+    cleanBrakerAA(runBraker4.out.aa_seqs)
     runInterPro(cleanBrakerAA.out)
-    combine_interpro_braker(runBraker3.out.braker_annots, runInterPro.out.interpro_tsv)
+    combine_interpro_braker(runBraker4.out.braker_annots, runInterPro.out.interpro_tsv)
     runBrakerBusco(cleanBrakerAA.out)
 
 }
