@@ -9,7 +9,7 @@ This pipeline is designed to be run on the Polar2020 cluster. The parameters you
 Note: do not modify or edit `nextflow.config` unless you know what you're doing. These contain the hardcoded dependency paths (Dfam, Interpro, Singularity caches, etc.) specific to Polar2020.
 
 1. Copy the template: copy `params_template.yaml` to `params.yaml`.
-2. Fill in the paths to your genome, reads, and protein references. If you are skipping a file (e.g., you don't have RNA reads), leave it as `null`.
+2. Fill in the paths to your genome assembly, masked assembly (optional), and path to a directory with all rna-seq reads (optional). If you are skipping a file (e.g., you don't have RNA reads), leave it as `null`.
 3. Run with Nextflow, passing your config file with `-params-file`.
 
 ```bash
@@ -21,7 +21,7 @@ nextflow run artorias111/FeatureFlow -params-file params.yaml
 FeatureFlow dynamically builds the pipeline based on what you put in `params.yaml`.
 
 * **Full Pipeline**: Provide `genome_assembly`, `protein_ref`, and `rna_reads`. The pipeline will mask the genome with Earlgrey, run Braker4 with both RNA and protein evidence, and finish with functional annotation.
-* **Skip TE Masking**: Provide a `masked_genome` alongside your `genome_assembly`. The pipeline will skip Earlgrey and feed your provided masked genome directly into Braker4.
+* **Skip Masking**: Provide a `masked_genome` alongside your `genome_assembly`. The pipeline will skip Earlgrey and feed your provided masked genome directly into Braker4.
 * **Protein-Only Mode**: Leave `rna_reads` as `null` or empty. Braker4 will automatically fall back to protein-only evidence for structural annotation. 
 
 #### Results
