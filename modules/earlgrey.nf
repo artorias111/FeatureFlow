@@ -1,7 +1,7 @@
 process annotate_TEs { 
     publishDir 'results', mode: 'symlink'
     
-    conda '/data2/work/local/miniconda/envs/earlgrey'
+    conda params.earlGrey_env
 
     input:
     path genome_asm
