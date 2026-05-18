@@ -1,110 +1,37 @@
 # FeatureFlow
-A pipeline for genome annotation (On Polar2020) consisting of repeat masking, gene prediction, and functional annotation.
 
-## Prerequisites
+A pipeline to annotate genome assemblies automatically using Earlgrey and Braker4, complete with functional annotation (Interpro)
 
-- Nextflow: `conda activate /data2/work/local/miniconda/envs/nextflow`
-- Access to reference data (protein references, RNA-seq reads for genome annotation)
-- RNA-seq reads for annotation must all be in one directory, which is passed to the script with the `--rna_reads` flag
+## Usage
 
-## Quick Start
+This pipeline is designed to be run on the Polar2020 cluster. The parameters you need to fill in are managed via a custom YAML config file. The pipeline automatically routes the workflow based on the files you provide, so you don't need to pass any complicated mode flags.
 
-```bash
-# Load nextflow onto your environment
-conda activate /data2/work/local/miniconda/envs/nextflow
+Note: do not modify or edit `nextflow.config` unless you know what you're doing. These contain the hardcoded dependency paths (Dfam, Interpro, Singularity caches, etc.) specific to Polar2020.
 
-# run FeatureFlow
-nextflow run artorias111/FeatureFlow --genome_assembly /path/to/my_genome.fa --rna_reads /path/to/rna/reads --species_id my_species --nthreads 64
-
-# run Featureflow in a specific mode (see below for the full list of modes)
-nextflow run artorias111/FeatureFlow --runMode interPro --braker_aa /path/to/braker.aa --braker_gff /path/to/braker.gff3
-```
-
-## A (slightly) longer way to go about it, if you want to explore and change local code
-```bash
-# Load nextflow onto your environment
-conda activate /data2/work/local/miniconda/envs/nextflow
-
-# clone this repo
-git clone https://github.com/artorias111/FeatureFlow.git
-# rename the folder to make more sense
-mv FeatureFlow Dmaw12_annotations
-cd Dmaw12_annotations
-
-# Run FeatureFlow's entire pipeline
-nextflow run main.nf --genome_assembly /path/to/my_genome.fa --rna_reads /path/to/rna/reads --nthreads 64
-
-# Run FeatureFlow in interpro mode
-nextflow run main.nf --runMode interPro --braker_aa /path/to/braker.aa --braker_gff /path/to/braker.gff3
-
-# Show help message
-nextflow run main.nf --help
-```
-
-## Usage scenarios
-There are situations where you've run RepeatMasker after assembling your genome, and now you want to run the rest of this pipeline, without running repeatmasker again. That's possible, via different run modes of FeatureFlow, provided with the `--runMode` flag. A list of all Run Modes are in the "Run Modes" section below. \
-If you want to run the pipeline starting from braker: 
-```bash
-nextflow run main.nf --runMode braker_interpro --genome_assembly /path/to/masked/assembly.fa --rna_reads /path/to/rna_seq/read/dir
-```
-
-### If you only have protein data and no RNA-seq for annotation
-There's two modes that can be specified through `--runMode` (see the section "Run Modes") that allows you to only use protein reference instead of protein+RNA-seq for training braker. 
-
-## Run Modes
-FeatureFlow can be run in different modes, depending on the use case. A list of available Run Modes and use cases: 
-
-| Run mode | Flag | Description |
-|----------|------|-------------|
-| full     | `--runMode full` | entire pipeline, requires `--genome_assembly` and `--rna_reads` |
-|repeatMask |`--runMode repeatMask`| run RepeatModeler, RepeatMasker, and KimuraDiverge, only requires `--genome_assembly` |
-| braker+interpro|`--runMode braker_interpro`| Run braker, followed by interproscan, and combine the two results. Ideal if you've already run repeatmasker |
-| braker | `--runMode braker` | only braker, expects you to provide a masked genome assembly via `--genome_assembly`. Also requires `--rna_reads` |
-|interPro | `--runMode interPro` | only interPro, expects you to provide an amino acid sequence file via `--braker_aa`, and the braker gff to combine the interpro results with `--braker_gff` |
-| braker_bam | `--runMode braker_bam` | You have a merged bam file that already contains the aligned reads, and you want to run Braker with this pre-aligned file. Requires a masked assembly with `--genome_assembly` and the bam file with `--braker_bam`|
-| protein_only | `--runMode protein_only` | Same as `--runMode full`, but without RNA-seq reads, and only uses protein reference to train braker. Requires only the path to genome assembly via `--genome_assembly` |
-| brakerP_only | `--runMode braker_protein_only` | Same as braker+interpro, but with only protein reference. Requires a masked genome assembly via `--genome_assembly` |
-
-
-
-## Common Parameters
-
-| Parameter | Description |
-|-----------|-------------|
-| `--genome_assembly` | Path to genome assembly FASTA file (or the masked assembly, depending on the `runMode` |
-| `--nthreads` | Number of CPU threads to use (default: `64`) |
-| `--rna_reads` | Path to RNA-seq reads directory | 
-| `--protein_ref`| Path to reference proteins FASTA file | 
-|`--braker_aa`|Path to a `braker.aa` (or any) amino acid fasta file |
-|`--braker_gff`| Path to a `braker.gff3` file, to combine interpro results with the braker annotations|
-
-## Output
-If you're interested in the final annotated `gff3`, you will find it in `results/agat/agat_out`
-
-When run in `full` mode, the pipeline generates annotated genome files in the `results` directory, including:
-- Repeat-masked genome sequences
-- Gene predictions
-- Functional annotations
-- Protein and transcript sequences
-
-When run in any of the other modes, the outputs are all in the `results` directory, with subdirectories named accordingly. 
-
-Another set of outputs includes the standard `work` directory produced by Nextflow pipelines. The directories are named according to the executor name of the process, and contain all the output files, and command logs (as `.command.*`) for each process. 
-
-
-## Advanced Usage
-
-For advanced configuration, you can edit the parameters directly in the `nextflow.config` file. However, this is not a recommended option, and is primarily targeted for development use only. There's also some workflows that's only available for dev. For more information, see the help message:
+1. Copy the template: copy `params_template.yaml` to `params.yaml`.
+2. Fill in the paths to your genome, reads, and protein references. If you are skipping a file (e.g., you don't have RNA reads), leave it as `null`.
+3. Run with Nextflow, passing your config file with `-params-file`.
 
 ```bash
-nextflow run main.nf --help
+nextflow run artorias111/FeatureFlow -params-file params.yaml
 ```
 
-## tools used in this annotation pipeline
-- RepeatMasker
-- RepeatModeler
-- HISAT2
-- BRAKER3
-- gffread
-- interProScan
-- AGAT
+#### Run Modes (Auto-Routed)
+
+FeatureFlow dynamically builds the pipeline based on what you put in `params.yaml`.
+
+* **Full Pipeline**: Provide `genome_assembly`, `protein_ref`, and `rna_reads`. The pipeline will mask the genome with Earlgrey, run Braker4 with both RNA and protein evidence, and finish with functional annotation.
+* **Skip TE Masking**: Provide a `masked_genome` alongside your `genome_assembly`. The pipeline will skip Earlgrey and feed your provided masked genome directly into Braker4.
+* **Protein-Only Mode**: Leave `rna_reads` as `null` or empty. Braker4 will automatically fall back to protein-only evidence for structural annotation. 
+
+#### Results
+
+Results are executed in the `work` directory, but you have access to clean symlinks of the actual files organized in the `results` directory, so you're not lost in the sea of hex-coded directories in `work`.
+
+#### Tools used in the pipeline
+
+* Earlgrey (https://github.com/TobyBaril/EarlGrey)
+* Braker4 (https://github.com/Gaius-Augustus/BRAKER4)
+* InterProScan (https://github.com/ebi-pf-team/interproscan)
+* AGAT (https://github.com/NBISweden/AGAT)
+* BUSCO (https://gitlab.com/ezlab/busco)

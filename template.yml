@@ -1,0 +1,12 @@
+# Pipeline Inputs
+species_id: null                                 # REQUIRED: An id for you species, eg :"Dele4"
+genome_assembly: "path/to/genome.fasta"  # REQUIRED: Unmasked genome
+masked_genome: null                      # OPTIONAL: Provide this to skip Earlgrey TE annotation
+rna_reads: "path/to/rna_dir"             # OPTIONAL: Leave empty/null to run Braker in Protein-only mode
+
+# System
+nthreads: 16
+
+# Paths to dependencies - only for default overrides
+# dfam_ref: "path/to/dfam"
+# interproscan: "path/to/interpro"

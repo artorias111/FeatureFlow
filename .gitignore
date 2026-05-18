@@ -9,3 +9,7 @@ results/*
 # Rust specific git ignores
 **/target/
 **.rs.bk
+
+# testing parameters
+test_template.yml
+old*
