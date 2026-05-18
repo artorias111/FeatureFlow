@@ -12,4 +12,5 @@ results/*
 
 # testing parameters
 test_template.yml
+test_template*.yml
 old*
