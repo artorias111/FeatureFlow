@@ -14,6 +14,7 @@ Note: do not modify or edit `nextflow.config` unless you know what you're doing.
 
 ```bash
 nextflow run artorias111/FeatureFlow -params-file params.yaml
+# you can name params.yaml to whatever you'd like, this is an example
 ```
 
 #### Run Modes (Auto-Routed)
