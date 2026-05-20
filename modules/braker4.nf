@@ -22,8 +22,8 @@ process runBraker4 {
     path "output/${params.species_id}/braker.aa", emit: aa_seqs
 
     script:
-    def r1_string = rna_reads.findAll { it.name.contains('_R1') || it.name.contains('_1.') || it.name.contains('_1_') }.sort { it.name }.join(':')
-    def r2_string = rna_reads.findAll { it.name.contains('_R2') || it.name.contains('_2.') || it.name.contains('_2_') }.sort { it.name }.join(':')
+    def r1_string = rna_reads.findAll { it.name.contains('_R1') || it.name.contains('_1.') || it.name.contains('_1.fq') }.sort { it.name }.join(':')
+    def r2_string = rna_reads.findAll { it.name.contains('_R2') || it.name.contains('_2.') || it.name.contains('_2.fq') }.sort { it.name }.join(':')
     
     """
     cp ${projectDir}/assets/braker4/config.ini .
