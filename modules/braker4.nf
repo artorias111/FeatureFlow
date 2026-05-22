@@ -22,6 +22,7 @@ process runBraker4 {
     path "output/${params.species_id}/results/braker.aa", emit: aa_seqs
 
     script:
+    // Prone to edge-case bugs
     def r1_string = rna_reads.findAll { it.name.contains('_R1') || it.name.contains('_1.') || it.name.contains('_1.fq') }.sort { it.name }.join(':') // Ldea_1_R1, Ldea_1_R2
     def r2_string = rna_reads.findAll { it.name.contains('_R2') || it.name.contains('_2.') || it.name.contains('_2.fq') }.sort { it.name }.join(':')
     
@@ -42,7 +43,7 @@ process runBraker4 {
         --latency-wait 120 \\
         --restart-times 3
     
-    gunzip output/${params.species_id}/results/braker.gff3.gz
-    gunzip output/${params.species_id}/results/braker.aa.gz
+    pigz -d output/${params.species_id}/results/braker.gff3.gz
+    pigz -d output/${params.species_id}/results/braker.aa.gz
     """
 }
