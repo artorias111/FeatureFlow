@@ -65,7 +65,10 @@ workflow {
         braker_aa_ch     = Channel.fromPath(params.transcript_aa_fasta)
     } else {
         def rna_ch
-        if (params.rna_reads) {
+        if (params.bam) {
+            log.info "Mode: Braker4 with BAM and Protein evidence."
+            rna_ch = Channel.fromPath(params.bam).collect()
+        } else if (params.rna_reads) {
             log.info "Mode: Braker4 with RNA-seq and Protein evidence."
             rna_ch = Channel.fromPath("${params.rna_reads}/*{_R1,_R2,_1,_2}*.fastq*").collect()
         } else {
