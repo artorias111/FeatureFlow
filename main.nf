@@ -41,10 +41,6 @@ workflow {
     log.info "FeatureFlow Initializing..."
     log.info "========================================================"
 
-    if (!params.genome_assembly) {
-        error "ERROR: 'genome_assembly' is required in your config."
-    }
-
     def braker_annots_ch
     def braker_aa_ch
 
@@ -55,6 +51,10 @@ workflow {
         braker_aa_ch     = Channel.fromPath(params.transcript_aa_fasta)
 
     } else {
+        if (!params.genome_assembly) {
+            error "ERROR: 'genome_assembly' is required in your config."
+        }
+
         // 1. TE Masking
         def masked_asm_ch
         if (params.masked_genome) {
@@ -76,7 +76,7 @@ workflow {
             rna_ch = Channel.fromPath("${params.rna_reads}/*{_R1,_R2,_1,_2}*.fastq*").collect()
         } else {
             log.info "Mode: Braker4 Protein-only evidence."
-            rna_ch = Channel.of( [file("/dev/null")] )
+            rna_ch = Channel.of([])
         }
         runBraker4(Channel.fromPath(params.genome_assembly), masked_asm_ch, rna_ch, params.protein_ref)
         braker_annots_ch = runBraker4.out.braker_annots
