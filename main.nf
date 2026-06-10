@@ -43,7 +43,24 @@ workflow {
     if (!params.genome_assembly) {
         error "ERROR: 'genome_assembly' is required in your config."
     }
-    
+
+    // Short-circuit: if a pre-existing GFF and AA FASTA are provided, skip
+    // EarlGrey and BRAKER4 and go straight to functional annotation.
+    if (params.gene_annotation_gff && params.transcript_aa_fasta) {
+        log.info "Mode: Skipping EarlGrey and BRAKER4. Using provided GFF and AA FASTA."
+        def braker_annots_ch = Channel.fromPath(params.gene_annotation_gff)
+        def braker_aa_ch     = Channel.fromPath(params.transcript_aa_fasta)
+
+        // 3. Functional Annotation (Runs universally)
+        log.info "Functional annotation processes:"
+
+        cleanBrakerAA(braker_aa_ch)
+        runInterPro(cleanBrakerAA.out)
+        combine_interpro_braker(braker_annots_ch, runInterPro.out.interpro_tsv)
+        runBrakerBusco(cleanBrakerAA.out)
+        return
+    }
+
     genome_ch = Channel.fromPath(params.genome_assembly)
     def masked_asm_ch
 
@@ -62,10 +79,10 @@ workflow {
 
     if (params.rna_reads) {
         log.info "Mode: Braker4 with RNA-seq and Protein evidence."
-        rna_ch = Channel.fromPath("${params.rna_reads}/*{_R1,_R2,_1,_2}*.fastq*").collect() 
+        rna_ch = Channel.fromPath("${params.rna_reads}/*{_R1,_R2,_1,_2}*.fastq*").collect()
     } else {
         log.info "Mode: Braker4 Protein-only evidence."
-        rna_ch = Channel.of( [file("/dev/null")] ) 
+        rna_ch = Channel.of( [file("/dev/null")] )
     }
 
     runBraker4(genome_ch, masked_asm_ch, rna_ch, params.protein_ref)
@@ -75,7 +92,7 @@ workflow {
 
     // 3. Functional Annotation (Runs universally)
     log.info "Functional annotation processes:"
-    
+
     cleanBrakerAA(braker_aa_ch)
     runInterPro(cleanBrakerAA.out)
     combine_interpro_braker(braker_annots_ch, runInterPro.out.interpro_tsv)
