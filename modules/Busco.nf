@@ -13,7 +13,7 @@ process runBrakerBusco {
     """
     busco -i ${braker_aa} -o busco_output \
     -m prot \
-    -l actinopterygii_odb12 \
+    -l ${params.busco_lineage} \
     --download_path ${params.busco_download_path} \
     -c ${params.nthreads} --offline
     """

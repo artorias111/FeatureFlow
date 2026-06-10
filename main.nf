@@ -45,25 +45,28 @@ workflow {
         error "ERROR: 'genome_assembly' is required in your config."
     }
 
-    // 1. TE Masking
-    def masked_asm_ch
-    if (params.masked_genome) {
-        log.info "Mode: Skipping TE annotation. Using provided masked genome."
-        masked_asm_ch = Channel.fromPath(params.masked_genome)
-    } else {
-        log.info "Mode: Full pipeline. Masking genome with Earlgrey."
-        annotate_TEs(Channel.fromPath(params.genome_assembly))
-        masked_asm_ch = annotate_TEs.out.masked_asm
-    }
-
-    // 2. Structural Annotation
     def braker_annots_ch
     def braker_aa_ch
+
     if (params.gene_annotation_gff && params.transcript_aa_fasta) {
-        log.info "Mode: Skipping BRAKER4. Using provided GFF and AA FASTA."
+        // Skip EarlGrey and BRAKER4 entirely — use provided annotations
+        log.info "Mode: Skipping EarlGrey and BRAKER4. Using provided GFF and AA FASTA."
         braker_annots_ch = Channel.fromPath(params.gene_annotation_gff)
         braker_aa_ch     = Channel.fromPath(params.transcript_aa_fasta)
+
     } else {
+        // 1. TE Masking
+        def masked_asm_ch
+        if (params.masked_genome) {
+            log.info "Mode: Skipping TE annotation. Using provided masked genome."
+            masked_asm_ch = Channel.fromPath(params.masked_genome)
+        } else {
+            log.info "Mode: Full pipeline. Masking genome with Earlgrey."
+            annotate_TEs(Channel.fromPath(params.genome_assembly))
+            masked_asm_ch = annotate_TEs.out.masked_asm
+        }
+
+        // 2. Structural Annotation
         def rna_ch
         if (params.bam) {
             log.info "Mode: Braker4 with BAM and Protein evidence."
