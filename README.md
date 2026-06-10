@@ -1,38 +1,79 @@
 # FeatureFlow
 
-A pipeline to annotate genome assemblies automatically using Earlgrey and Braker4, complete with functional annotation (Interpro)
+Automated genome annotation pipeline: repeat masking → structural annotation → functional annotation. Runs on the Polar2020 cluster.
 
-## Usage
+---
 
-This pipeline is designed to be run on the Polar2020 cluster. The parameters you need to fill in are managed via a custom YAML config file. The pipeline automatically routes the workflow based on the files you provide, so you don't need to pass any complicated mode flags.
+## Quick Start
 
-Note: do not modify or edit `nextflow.config` unless you know what you're doing. These contain the hardcoded dependency paths (Dfam, Interpro, Singularity caches, etc.) specific to Polar2020.
-
-1. Copy the template: copy `params_template.yaml` to `params.yaml`.
-2. Fill in the paths to your genome assembly, masked assembly (optional), and path to a directory with all rna-seq reads (optional). If you are skipping a file (e.g., you don't have RNA reads), leave it as `null`.
-3. Run with Nextflow, passing your config file with `-params-file`.
-
+**1. Copy the params template**
 ```bash
-nextflow run artorias111/FeatureFlow -params-file params.yaml
-# you can name params.yaml to whatever you'd like, this is an example
+cp params_template.yaml params.yaml
 ```
 
-#### Run Modes (Auto-Routed)
+**2. Fill in your params.yaml**
+```yaml
+species_id: "MySpecies1"              # a short label for your species
+genome_assembly: "/path/to/genome.fasta"
 
-FeatureFlow dynamically builds the pipeline based on what you put in `params.yaml`.
+# Optional — leave as null if you don't have these
+masked_genome: null        # skip repeat masking if you already have a masked genome
+rna_reads: null            # directory containing R1/R2 fastq files
+bam: null                  # pre-aligned RNA-seq BAM (use instead of rna_reads)
+gene_annotation_gff: null  # skip straight to functional annotation if you already have a GFF
+transcript_aa_fasta: null  # required alongside gene_annotation_gff above
 
-* **Full Pipeline**: Provide `genome_assembly`, `protein_ref`, and `rna_reads`. The pipeline will mask the genome with Earlgrey, run Braker4 with both RNA and protein evidence, and finish with functional annotation.
-* **Skip Masking**: Provide a `masked_genome` alongside your `genome_assembly`. The pipeline will skip Earlgrey and feed your provided masked genome directly into Braker4.
-* **Protein-Only Mode**: Leave `rna_reads` as `null` or empty. Braker4 will automatically fall back to protein-only evidence for structural annotation. 
+busco_lineage: "eukaryota_odb12"
+nthreads: 16
+```
 
-#### Results
+**3. Run**
+```bash
+nextflow run artorias111/FeatureFlow -params-file params.yaml
+```
 
-Results are executed in the `work` directory, but you have access to clean symlinks of the actual files organized in the `results` directory, so you're not lost in the sea of hex-coded directories in `work`.
+Results will appear in the `results/` directory.
 
-#### Tools used in the pipeline
+---
 
-* Earlgrey (https://github.com/TobyBaril/EarlGrey)
-* Braker4 (https://github.com/Gaius-Augustus/BRAKER4)
-* InterProScan (https://github.com/ebi-pf-team/interproscan)
-* AGAT (https://github.com/NBISweden/AGAT)
-* BUSCO (https://gitlab.com/ezlab/busco)
+## Run Modes
+
+The pipeline figures out what to run based on what you provide. You don't need to set any mode flags.
+
+| What you provide | What the pipeline does |
+|---|---|
+| `genome_assembly` | Full pipeline: mask genome → structural annotation (protein-only) → functional annotation |
+| + `rna_reads` or `bam` | Same as above but uses RNA evidence in structural annotation |
+| + `masked_genome` | Skips repeat masking, uses your masked genome directly |
+| + `gene_annotation_gff` and `transcript_aa_fasta` | Skips masking and structural annotation entirely, runs functional annotation only |
+
+---
+
+## Output
+
+Results are in `results/`, organized by tool:
+
+- `results/EarlGrey/` — repeat-masked genome and TE annotations
+- `results/Braker4/` — structural annotation (GFF3 + protein sequences)
+- `results/InterPro/` — functional domain annotations
+- `results/BUSCO/` — annotation completeness assessment
+
+The `work/` directory contains Nextflow's intermediate files — you can ignore it.
+
+---
+
+## Notes
+
+- Do not edit `nextflow.config`. It contains hardcoded paths to Polar2020's shared dependencies (Dfam, InterProScan, Singularity caches, etc.).
+- BAM files must be coordinate-sorted. If you have multiple BAMs, you can use a glob: `bam: "/path/to/rnaseq/*.bam"`.
+- If you leave both `rna_reads` and `bam` as null, BRAKER4 will run in protein-only mode.
+
+---
+
+## Tools
+
+- [EarlGrey](https://github.com/TobyBaril/EarlGrey) — transposable element annotation and masking
+- [BRAKER4](https://github.com/Gaius-Augustus/BRAKER4) — structural gene annotation
+- [InterProScan](https://github.com/ebi-pf-team/interproscan) — functional domain annotation
+- [AGAT](https://github.com/NBISweden/AGAT) — GFF parsing and merging
+- [BUSCO](https://gitlab.com/ezlab/busco) — annotation completeness
