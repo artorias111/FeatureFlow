@@ -1,12 +1,26 @@
-# Pipeline Inputs
-species_id: null                                 # REQUIRED: An id for you species, eg :"Dele4"
-genome_assembly: "path/to/genome.fasta"  # REQUIRED: Unmasked genome
-masked_genome: null                      # OPTIONAL: Provide this to skip Earlgrey TE annotation
-rna_reads: "path/to/rna_dir"             # OPTIONAL: Leave empty/null to run Braker in Protein-only mode
+# ---- Required ---------------------------------------------------------------
+species_id: null                        # Short label for your species, e.g. "MySpecies1"
+genome_assembly: null                   # Path to unmasked genome FASTA
+protein_ref: null                       # Path to reference protein FASTA
 
-# System
+# ---- Optional: skip repeat masking ------------------------------------------
+masked_genome: null                     # Provide to skip EarlGrey
+
+# ---- Optional: RNA evidence for structural annotation -----------------------
+rna_reads: null                         # Directory containing R1/R2 FASTQ files
+bam: null                               # Pre-aligned RNA-seq BAM (use instead of rna_reads)
+                                        # Accepts a glob, e.g. "/path/to/rnaseq/*.bam"
+
+# ---- Optional: skip straight to functional annotation -----------------------
+gene_annotation_gff: null              # Existing GFF3 annotation
+transcript_aa_fasta: null              # Matching protein/AA FASTA
+
+# ---- BUSCO ------------------------------------------------------------------
+busco_lineage: "eukaryota_odb12"
+
+# ---- Resources --------------------------------------------------------------
 nthreads: 16
 
-# Paths to dependencies - only for default overrides
-# dfam_ref: "path/to/dfam"
-# interproscan: "path/to/interpro"
+# ---- Dependency overrides (Polar2020 defaults used if left commented out) ---
+# dfam_ref: "/path/to/dfam"
+# interproscan: "/path/to/interpro"
