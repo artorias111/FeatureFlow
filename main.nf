@@ -88,5 +88,5 @@ workflow {
     cleanBrakerAA(braker_aa_ch)
     runInterPro(cleanBrakerAA.out)
     combine_interpro_braker(braker_annots_ch, runInterPro.out.interpro_tsv)
-    runBrakerBusco(cleanBrakerAA.out)
+    // runBrakerBusco(cleanBrakerAA.out)
 }
