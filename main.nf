@@ -48,15 +48,11 @@ workflow {
     // EarlGrey and BRAKER4 and go straight to functional annotation.
     if (params.gene_annotation_gff && params.transcript_aa_fasta) {
         log.info "Mode: Skipping EarlGrey and BRAKER4. Using provided GFF and AA FASTA."
-        def braker_annots_ch = Channel.fromPath(params.gene_annotation_gff)
-        def braker_aa_ch     = Channel.fromPath(params.transcript_aa_fasta)
-
-        // 3. Functional Annotation (Runs universally)
         log.info "Functional annotation processes:"
 
-        cleanBrakerAA(braker_aa_ch)
+        cleanBrakerAA(Channel.fromPath(params.transcript_aa_fasta))
         runInterPro(cleanBrakerAA.out)
-        combine_interpro_braker(braker_annots_ch, runInterPro.out.interpro_tsv)
+        combine_interpro_braker(Channel.fromPath(params.gene_annotation_gff), runInterPro.out.interpro_tsv)
         runBrakerBusco(cleanBrakerAA.out)
         return
     }
