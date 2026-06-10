@@ -15,7 +15,6 @@ cp params_template.yaml params.yaml
 ```yaml
 species_id: "MySpecies1"              # a short label for your species
 genome_assembly: "/path/to/genome.fasta"
-protein_ref: "/path/to/proteins.fasta"
 
 # Optional — leave as null if you don't have these
 masked_genome: null        # skip repeat masking if you already have a masked genome
@@ -43,7 +42,7 @@ The pipeline figures out what to run based on what you provide. You don't need t
 
 | What you provide | What the pipeline does |
 |---|---|
-| `genome_assembly` + `protein_ref` | Full pipeline: mask genome → structural annotation (protein-only) → functional annotation |
+| `genome_assembly` | Full pipeline: mask genome → structural annotation (protein-only) → functional annotation |
 | + `rna_reads` or `bam` | Same as above but uses RNA evidence in structural annotation |
 | + `masked_genome` | Skips repeat masking, uses your masked genome directly |
 | + `gene_annotation_gff` and `transcript_aa_fasta` | Skips masking and structural annotation entirely, runs functional annotation only |

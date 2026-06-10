@@ -1,8 +1,6 @@
 # ---- Required ---------------------------------------------------------------
 species_id: null                        # Short label for your species, e.g. "MySpecies1"
 genome_assembly: null                   # Path to unmasked genome FASTA
-protein_ref: null                       # Path to reference protein FASTA
-
 # ---- Optional: skip repeat masking ------------------------------------------
 masked_genome: null                     # Provide to skip EarlGrey
 
