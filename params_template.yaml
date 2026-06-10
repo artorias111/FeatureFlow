@@ -1,6 +1,9 @@
 # ---- Required ---------------------------------------------------------------
 species_id: null                        # Short label for your species, e.g. "MySpecies1"
+
+# ---- Required (unless using gene_annotation_gff + transcript_aa_fasta) ------
 genome_assembly: null                   # Path to unmasked genome FASTA
+
 # ---- Optional: skip repeat masking ------------------------------------------
 masked_genome: null                     # Provide to skip EarlGrey
 
