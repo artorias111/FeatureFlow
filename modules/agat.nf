@@ -10,7 +10,7 @@ process combine_interpro_braker {
     path interpro_tsv // interpro_output
 
     output:
-    path "agat_out/braker.gff3"
+    path "agat_out/*.gff3" // glob to remove hardcoded braker dependency
     path "agat_out/report.txt"
 
     script:
