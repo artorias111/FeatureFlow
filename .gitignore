@@ -14,3 +14,6 @@ results/*
 test_template.yml
 test_template*.yml
 old*
+
+
+params.yaml
