@@ -33,6 +33,7 @@ include { runInterPro } from './modules/interpro.nf'
 include { combine_interpro_braker } from './modules/agat.nf'
 include { runBrakerBusco } from './modules/Busco.nf'
 include { merge_interpro_agat } from './modules/agat.nf'
+include { trimPairedReads } from './modules/fastp.nf'
 
 // ---------------------------------------------------------------
 // Main Dynamic Workflow
@@ -74,7 +75,13 @@ workflow {
             rna_ch = Channel.fromPath(params.bam).collect()
         } else if (params.rna_reads) {
             log.info "Mode: Braker4 with RNA-seq and Protein evidence."
-            rna_ch = Channel.fromPath("${params.rna_reads}/*{_R1,_R2,_1,_2}*.fastq*").collect()
+            rna_reads = "${params.rna_reads}/*{_R1,_R2,_1,_2}*.fastq*"
+            untrimmed_pairs_ch = Channel.fromFilePairs(rna_reads, checkIfExists: true, flat: true)
+
+            rna_ch = trimPairedReads(untrimmed_pairs_ch)
+                        .out.trimmed_read_pair
+                        .collect()
+
         } else {
             log.info "Mode: Braker4 Protein-only evidence."
             rna_ch = Channel.of([])
