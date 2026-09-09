@@ -2,9 +2,7 @@
 
 def helpMessage() {
     log.info"""
-    ================================================================
     FeatureFlow Pipeline: Genome Annotation
-    ================================================================
     Usage:
     nextflow run main.nf -params-file params.yaml [options]
 
@@ -14,7 +12,6 @@ def helpMessage() {
     2. Skip Masking: Provide 'masked_genome' alongside 'genome_assembly'.
     3. Protein-Only: Omit 'rna_reads'.
     4. Skip to Functional Annotation: Provide 'gene_annotation_gff' and 'transcript_aa_fasta'.
-    ================================================================
     """
 }
 
@@ -78,8 +75,9 @@ workflow {
             rna_reads = "${params.rna_reads}/*{_R1,_R2,_1,_2}*.fastq*"
             untrimmed_pairs_ch = Channel.fromFilePairs(rna_reads, checkIfExists: true, flat: true)
 
-            rna_ch = trimPairedReads(untrimmed_pairs_ch)
-                        .out.trimmed_read_pair
+            trimPairedReads(untrimmed_pairs_ch)
+            rna_ch = trimPairedReads.out.trimmed_read_pair
+                        .flatten()
                         .collect()
 
         } else {

@@ -2,10 +2,10 @@ process trimPairedReads {
     conda params.fastp_env
 
     input:
-    tuple  val(id) path(reads1), path(reads2)
+    tuple  val(id), path(reads1), path(reads2)
 
     output:
-    tuple path(${id}.R1.trimmed.fastq.gz), path(${id}.R1.trimmed.fastq.gz), emit: trimmed_read_pair
+    tuple path("${id}.R1.trimmed.fastq.gz"), path("${id}.R2.trimmed.fastq.gz"), emit: trimmed_read_pair
 
     script:
     """
