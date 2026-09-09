@@ -15,11 +15,6 @@ def helpMessage() {
     """
 }
 
-if (params.help) {
-    helpMessage()
-    exit 0
-}
-
 // ---------------------------------------------------------------
 // Modules
 // ---------------------------------------------------------------
@@ -36,6 +31,12 @@ include { trimPairedReads } from './modules/fastp.nf'
 // Main Dynamic Workflow
 // ---------------------------------------------------------------
 workflow {
+
+    if( params.help ) {
+        helpMessage()
+        return
+    }
+
     log.info "========================================================"
     log.info "FeatureFlow Initializing..."
     log.info "========================================================"
