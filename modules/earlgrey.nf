@@ -1,6 +1,5 @@
-process annotate_TEs { 
+process annotate_TEs {
     publishDir 'results', mode: 'symlink'
-    
     conda params.earlGrey_env
 
     input:

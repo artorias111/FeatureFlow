@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 
+# usage: ./merge_braker_interpro.py -o <output_file.gff3> <interpro.tsv> <braker-or-agat.gff3>
+# -o is a command line flag, the other two are positional arguments
+
 import argparse
 import sys
 
