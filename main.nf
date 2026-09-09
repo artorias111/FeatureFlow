@@ -32,6 +32,7 @@ include { cleanBrakerAA } from './modules/clean_braker_aa.nf'
 include { runInterPro } from './modules/interpro.nf'
 include { combine_interpro_braker } from './modules/agat.nf'
 include { runBrakerBusco } from './modules/Busco.nf'
+include { merge_interpro_agat } from './modules/agat.nf'
 
 // ---------------------------------------------------------------
 // Main Dynamic Workflow
@@ -88,5 +89,6 @@ workflow {
     cleanBrakerAA(braker_aa_ch)
     runInterPro(cleanBrakerAA.out)
     combine_interpro_braker(braker_annots_ch, runInterPro.out.interpro_tsv)
+    merge_interpro_agat(runInterPro.out.interpro_tsv, combine_interpro_braker.out.agat_out)
     // runBrakerBusco(cleanBrakerAA.out)
 }
